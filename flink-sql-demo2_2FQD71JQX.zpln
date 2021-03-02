@@ -1,0 +1,480 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\nflink.execution.mode yarn\nflink.jm.memory 2048\nflink.tm.memory 2048\nflink.tm.slot 1\nflink.yarn.appName flink-sql-demo2\nflink.execution.parallelism 10\n# 开启Checkpoint，指定两次checkpoint开始调度之间的间隔，单位毫秒\n# 当然，还会受到checkpoint并发数和min-pause影响\nexecution.checkpointing.interval 120000\n# 开始下次Checkpoint时距离上一次Checkpoint完成后的最小时间间隔，单位毫秒\nexecution.checkpointing.min-pause 60000\n# 如果某次Checkpoint超过此阈值还没完成，则将进行中的Checkpoint干掉作废，单位毫秒\nexecution.checkpointing.timeout 60000\n# 当Cancel该job时也保留 Checkpoint，用于作业手动重启\n# 此模式下我们必须在Cancel后需要手动删除Checkpoint文件。\nexecution.checkpointing.externalized-checkpoint-retention RETAIN_ON_CANCELLATION",
+      "user": "admin",
+      "dateUpdated": "2020-11-26 19:04:04.776",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606274746692_1615207558",
+      "id": "paragraph_1606274746692_1615207558",
+      "dateCreated": "2020-11-25 11:25:46.692",
+      "dateStarted": "2020-11-26 19:04:04.792",
+      "dateFinished": "2020-11-26 19:04:04.803",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS dwd_paid_order_detail;\nCREATE TABLE dwd_paid_order_detail\n(\n  detail_id BIGINT,\n  order_id BIGINT,\n  user_id BIGINT,\n  province_id INT,\n  sku_id BIGINT,\n  sku_name STRING,\n  sku_num INT,\n  order_price DECIMAL(10,2),\n  create_time TIMESTAMP(0),\n  pay_time TIMESTAMP(0)\n ) WITH (\n    \u0027connector\u0027 \u003d \u0027kafka\u0027,\n    \u0027topic\u0027 \u003d \u0027dwd_paid_order_detail\u0027,\n    \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n    \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n    \u0027properties.group.id\u0027 \u003d \u0027testGroup3\u0027,\n    \u0027format\u0027 \u003d \u0027changelog-json\u0027\n);\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-11-25 19:51:23.557",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 10.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606274472386_1205013348",
+      "id": "paragraph_1606271992968_68012788",
+      "dateCreated": "2020-11-25 11:21:12.386",
+      "dateStarted": "2020-11-25 19:51:23.562",
+      "dateFinished": "2020-11-25 19:52:01.195",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS ads_province_index;\nCREATE TABLE ads_province_index(\n  province_id INT,\n  area_code STRING,\n  province_name STRING,\n  region_id INT,\n  region_name STRING,\n  order_amount DECIMAL(10,2),\n  order_count BIGINT,\n  dt STRING,\n  PRIMARY KEY (province_id, dt) NOT ENFORCED  \n) WITH (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://172.200.2.248:3306/ads\u0027,\n    \u0027table-name\u0027 \u003d \u0027ads_province_index\u0027, \n    \u0027driver\u0027 \u003d \u0027com.mysql.jdbc.Driver\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027wxh123456\u0027\n);",
+      "user": "anonymous",
+      "dateUpdated": "2020-11-25 19:52:07.963",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 11.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606304000420_1570305064",
+      "id": "paragraph_1606304000420_1570305064",
+      "dateCreated": "2020-11-25 19:33:20.420",
+      "dateStarted": "2020-11-25 19:52:07.969",
+      "dateFinished": "2020-11-25 19:52:08.262",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS tmp_province_index;\nCREATE TABLE tmp_province_index(\n    province_id INT,\n    order_count BIGINT,\n    order_amount DECIMAL(10,2),\n    pay_date STRING\n)WITH (\n    \u0027connector\u0027 \u003d \u0027kafka\u0027,\n    \u0027topic\u0027 \u003d \u0027tmp_province_index\u0027,\n    \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n    \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n    \u0027format\u0027 \u003d \u0027changelog-json\u0027\n);",
+      "user": "anonymous",
+      "dateUpdated": "2020-11-25 19:52:11.288",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606295321737_1820750349",
+      "id": "paragraph_1606295321737_1820750349",
+      "dateCreated": "2020-11-25 17:08:41.737",
+      "dateStarted": "2020-11-25 19:52:11.293",
+      "dateFinished": "2020-11-25 19:52:11.596",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS tmp_province_index_source;\nCREATE TABLE tmp_province_index_source(\n    province_id INT,\n    order_count BIGINT,-- 订单数\n    order_amount DECIMAL(10,2), -- 订单金额\n    pay_date DATE,\n    proctime as PROCTIME()   -- 通过计算列产生一个处理时间列\n ) WITH (\n    \u0027connector\u0027 \u003d \u0027kafka\u0027,\n    \u0027topic\u0027 \u003d \u0027tmp_province_index\u0027,\n    \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n    \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n    \u0027properties.group.id\u0027 \u003d \u0027testGroup2\u0027,\n    \u0027format\u0027 \u003d \u0027changelog-json\u0027\n);",
+      "user": "anonymous",
+      "dateUpdated": "2020-11-25 19:52:13.255",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606303158783_772644761",
+      "id": "paragraph_1606303158783_772644761",
+      "dateCreated": "2020-11-25 19:19:18.783",
+      "dateStarted": "2020-11-25 19:52:13.262",
+      "dateFinished": "2020-11-25 19:52:13.592",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS `dim_province`;\nCREATE TABLE dim_province (\n  province_id INT,\n  province_name STRING,\n  area_code STRING,\n  region_id INT,\n  region_name STRING ,\n  PRIMARY KEY (province_id) NOT ENFORCED\n) WITH (\n    \u0027connector\u0027 \u003d \u0027jdbc\u0027,\n    \u0027url\u0027 \u003d \u0027jdbc:mysql://172.200.2.248:3306/dim\u0027,\n    \u0027table-name\u0027 \u003d \u0027dim_province\u0027, \n    \u0027driver\u0027 \u003d \u0027com.mysql.jdbc.Driver\u0027,\n    \u0027username\u0027 \u003d \u0027root\u0027,\n    \u0027password\u0027 \u003d \u0027wxh123456\u0027,\n    \u0027scan.fetch-size\u0027 \u003d \u0027100\u0027\n);",
+      "user": "anonymous",
+      "dateUpdated": "2020-11-25 19:52:16.531",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606303253872_526148509",
+      "id": "paragraph_1606303253872_526148509",
+      "dateCreated": "2020-11-25 19:20:53.872",
+      "dateStarted": "2020-11-25 19:52:16.538",
+      "dateFinished": "2020-11-25 19:52:16.845",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,runAsOne\u003dtrue,refreshInterval\u003d1000,threshold\u003d60000,parallelism\u003d2,resumeFromLatestCheckpoint\u003dfalse)\nINSERT INTO tmp_province_index\nSELECT\n      province_id,\n      count(distinct order_id) order_count,-- 订单数\n      sum(order_price * sku_num) order_amount, -- 订单金额\n      DATE_FORMAT(pay_time,\u0027yyyy-MM-dd\u0027) pay_date\nFROM dwd_paid_order_detail\nGROUP BY province_id,DATE_FORMAT(pay_time,\u0027yyyy-MM-dd\u0027);\n\nINSERT INTO table_print\nSELECT * from ads_province_index;",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-01 19:32:56.712",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 15.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true,
+        "latest_checkpoint_path": "\u003ccheckpoint-not-externally-addressable\u003e"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-5:28884#/job/961df2e2bc12043f7f6f5bc95143a102"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606295369901_173486701",
+      "id": "paragraph_1606295369901_173486701",
+      "dateCreated": "2020-11-25 17:09:29.901",
+      "dateStarted": "2020-11-25 19:53:07.823",
+      "dateFinished": "2020-11-25 19:52:31.196",
+      "status": "ABORT"
+    },
+    {
+      "text": "%flink.ssql(jobName\u003d\u0027insertProvinceIndex\u0027)\nINSERT INTO ads_province_index\nSELECT\n  pc.province_id,\n  dp.area_code,\n  dp.province_name,\n  dp.region_id,\n  dp.region_name,\n  pc.order_amount,\n  pc.order_count,\n  cast(pc.pay_date as VARCHAR)\nFROM\ntmp_province_index_source pc\n  JOIN dim_province FOR SYSTEM_TIME AS OF pc.proctime as dp \n  ON dp.province_id \u003d pc.province_id;",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-01 19:34:04.118",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "\u003ccheckpoint-not-externally-addressable\u003e",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-5:28884#/job/7b93c05b21655d44794ae84ed25ed8db"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606303314711_1213267721",
+      "id": "paragraph_1606303314711_1213267721",
+      "dateCreated": "2020-11-25 19:21:54.711",
+      "dateStarted": "2020-11-25 19:53:18.847",
+      "dateFinished": "2020-11-25 19:51:13.274",
+      "status": "ABORT"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,refreshInterval\u003d1000,threshold\u003d60000,parallelism\u003d1)\nSELECT * from ads_province_index;",
+      "user": "anonymous",
+      "dateUpdated": "2020-11-25 22:06:20.905",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "province_id": "string",
+                      "area_code": "string",
+                      "province_name": "string",
+                      "region_id": "string",
+                      "region_name": "string",
+                      "order_amount": "string",
+                      "order_count": "string",
+                      "dt": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "province_id\tarea_code\tprovince_name\tregion_id\tregion_name\torder_amount\torder_count\tdt\n3\t140000\t山西\t1\t华北\t68405.000000000000000000\t3\t2019-11-23\n5\t130000\t河北\t1\t华北\t7367.000000000000000000\t2\t2019-11-23\n7\t320000\t江苏\t2\t华东\t3565.000000000000000000\t2\t2019-11-23\n8\t330000\t浙江\t2\t华东\t3328.000000000000000000\t1\t2019-11-23\n9\t340000\t安徽\t2\t华东\t57905.000000000000000000\t2\t2019-11-23\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-5:28884#/job/fd9320044a63399de1ced4f948a27a0a"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606303343700_2056531612",
+      "id": "paragraph_1606303343700_2056531612",
+      "dateCreated": "2020-11-25 19:22:23.700",
+      "dateStarted": "2020-11-25 19:53:22.935",
+      "dateFinished": "2020-11-25 19:53:39.202",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-11-25 19:36:02.593",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606304162593_121548385",
+      "id": "paragraph_1606304162593_121548385",
+      "dateCreated": "2020-11-25 19:36:02.593",
+      "status": "READY"
+    }
+  ],
+  "name": "flink-sql-demo2",
+  "id": "2FQD71JQX",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "flink-2FQD71JQX": [
+      {
+        "name": "duration",
+        "object": "16 hours 2 minutes 42 seconds",
+        "noteId": "2FQD71JQX",
+        "paragraphId": "paragraph_1606295369901_173486701"
+      },
+      {
+        "name": "duration",
+        "object": "16 hours 2 minutes 31 seconds",
+        "noteId": "2FQD71JQX",
+        "paragraphId": "paragraph_1606303314711_1213267721"
+      }
+    ]
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

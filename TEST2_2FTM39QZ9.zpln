@@ -1,0 +1,164 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\nflink.execution.mode yarn\nflink.jm.memory 2048\nflink.tm.memory 2048\nflink.tm.slot 1\nflink.yarn.appName test11\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-04 17:28:28.683",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1607073211184_1728489527",
+      "id": "paragraph_1607073211184_1728489527",
+      "dateCreated": "2020-12-04 17:13:31.185",
+      "dateStarted": "2020-12-04 17:28:28.687",
+      "dateFinished": "2020-12-04 17:28:28.694",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS dwd_paid_order_detail;\nCREATE TABLE dwd_paid_order_detail\n(\n  detail_id BIGINT,\n  order_id BIGINT,\n  user_id BIGINT,\n  province_id INT,\n  sku_id BIGINT,\n  sku_name STRING,\n  sku_num INT,\n  order_price DECIMAL(10,2),\n  create_time TIMESTAMP(0),\n  pay_time TIMESTAMP(0)\n ) WITH (\n    \u0027connector\u0027 \u003d \u0027kafka\u0027,\n    \u0027topic\u0027 \u003d \u0027dwd_paid_order_detail\u0027,\n    \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n    \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n    \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n    \u0027format\u0027 \u003d \u0027changelog-json\u0027\n);",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-04 17:28:30.275",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1607073223966_1704415921",
+      "id": "paragraph_1607073223966_1704415921",
+      "dateCreated": "2020-12-04 17:13:43.966",
+      "dateStarted": "2020-12-04 17:28:30.279",
+      "dateFinished": "2020-12-04 17:29:20.370",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,runAsOne\u003dtrue,refreshInterval\u003d1000,parallelism\u003d1)\nselect * from dwd_paid_order_detail",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-04 17:29:24.118",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.lang.RuntimeException: Fail to callRemoteFunction, because connection is broken\n\tat org.apache.zeppelin.interpreter.remote.PooledRemoteClient.callRemoteFunction(PooledRemoteClient.java:108)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:98)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.getFormType(RemoteInterpreter.java:281)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:444)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:72)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:182)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-4:10341#/job/ad7a34d2decf3ecb116d0ed90f63145f"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1607073269722_786365511",
+      "id": "paragraph_1607073269722_786365511",
+      "dateCreated": "2020-12-04 17:14:29.722",
+      "dateStarted": "2020-12-09 10:52:44.396",
+      "dateFinished": "2020-12-09 10:52:46.606",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-04 17:15:32.221",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1607073332221_214377945",
+      "id": "paragraph_1607073332221_214377945",
+      "dateCreated": "2020-12-04 17:15:32.221",
+      "status": "READY"
+    }
+  ],
+  "name": "TEST2",
+  "id": "2FTM39QZ9",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

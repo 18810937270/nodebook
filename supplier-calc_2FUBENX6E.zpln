@@ -1,0 +1,207 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\nflink.execution.mode yarn\nflink.jm.memory 2048\nflink.tm.memory 2048\nflink.tm.slot 1\nflink.yarn.appName flink-sql-demo\nflink.execution.parallelism 10\n# 开启Checkpoint，指定两次checkpoint开始调度之间的间隔，单位毫秒\n# 当然，还会受到checkpoint并发数和min-pause影响\nexecution.checkpointing.interval 120000\n# 开始下次Checkpoint时距离上一次Checkpoint完成后的最小时间间隔，单位毫秒\nexecution.checkpointing.min-pause 60000\n# 如果某次Checkpoint超过此阈值还没完成，则将进行中的Checkpoint干掉作废，单位毫秒\nexecution.checkpointing.timeout 60000\n# 当Cancel该job时也保留 Checkpoint，用于作业手动重启\n# 此模式下我们必须在Cancel后需要手动删除Checkpoint文件。\nexecution.checkpointing.externalized-checkpoint-retention RETAIN_ON_CANCELLATION\nflink.execution.jars /home/xiaohui.wang/module/zeppelin/jars/flink-formats-1.0-SNAPSHOT.jar\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-01 20:15:30.659",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606813148838_1423028477",
+      "id": "paragraph_1606813148838_1423028477",
+      "dateCreated": "2020-12-01 16:59:08.838",
+      "dateStarted": "2020-12-01 20:15:30.676",
+      "dateFinished": "2020-12-01 20:15:30.688",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS `infos`;\nCREATE TABLE `infos` (\n  `id` BIGINT,\n  `order_id` BIGINT,\n  `user_id` BIGINT,\n  `creator_mobile` STRING,\n  `creator_mobile_id` BIGINT,\n  `order_number` STRING,\n  `from_mobile_id` BIGINT,\n  `from_mobile` STRING,\n  `from_name` STRING,\n  `from_city` STRING,\n  `from_address` STRING,\n  `from_address_detail` STRING,\n  `from_lat` DECIMAL(30,20),\n  `from_lng` DECIMAL(30,20),\n  `to_mobile_id` BIGINT,\n  `to_mobile` STRING,\n  `to_name` STRING,\n  `to_city` STRING,\n  `to_address` STRING,\n  `to_address_detail` STRING,\n  `to_lat` DECIMAL(30,20),\n  `to_lng` DECIMAL(30,20),\n  `pickup_appoint_time` BIGINT,\n  `delivery_appoint_time` BIGINT,\n  `pickup_password` STRING,\n  `delivery_password` STRING,\n  `goods` STRING,\n  `check_goods` STRING,\n  `info_index` INT,\n  `distance` INT,\n  `goods_pay` BIGINT,\n  `goods_type` INT,\n  `status` INT,\n  `from_city_id` BIGINT,\n  `to_city_id` BIGINT,\n  `goods_tag` STRING,\n  `from_poi_address` STRING,\n  `to_poi_address` STRING\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027bigdata-dev-mq:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027, \n \u0027ss-canal-json.table_name\u0027 \u003d \u0027infos\u0027, \n \u0027ss-canal-json.ignore-parse-errors\u0027 \u003d \u0027true\u0027\n );\n\nCREATE TABLE `orders` (\n  `id` BIGINT,\n  `user_id` BIGINT,\n  `city_id` BIGINT,\n  `coupon_id` BIGINT,\n  `courier_id` BIGINT,\n  `order_number` STRING,\n  `batch_order_number` STRING,\n  `coupon_number` STRING,\n  `city` STRING,\n  `channel` INT,\n  `bussiness_type` INT,\n  `type` INT,\n  `status` INT,\n  `distance` INT,\n  `weight` INT,\n  `travel_way` INT,\n  `courier_travel_way` INT,\n  `remark` STRING,\n  `is_merge` INT,\n  `abnormal` INT,\n  `cancelled` INT,\n  `appoint_type` INT,\n  `admin_remark` STRING,\n  `push_times` INT,\n  `ctime` BIGINT,\n  `place_time` BIGINT,\n  `finish_time` BIGINT,\n  `dispatch_type` INT,\n  `category` INT\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027bigdata-dev-mq:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027, \n \u0027ss-canal-json.table_name\u0027 \u003d \u0027orders\u0027, \n \u0027ss-canal-json.ignore-parse-errors\u0027 \u003d \u0027true\u0027\n );",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-02 10:44:26.114",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606813160941_679974186",
+      "id": "paragraph_1606813160941_679974186",
+      "dateCreated": "2020-12-01 16:59:20.941",
+      "dateStarted": "2020-12-01 20:15:32.453",
+      "dateFinished": "2020-12-01 20:16:19.415",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql(type\u003dappend)\nselect * from infos;\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-01 20:17:19.979",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/c4d61efeb5604e40012cb80edc8d9ab7/chk-28",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "from_address_detail": "string",
+                      "distance": "string",
+                      "from_lng": "string",
+                      "order_number": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.lang.RuntimeException: Fail to callRemoteFunction, because connection is broken\n\tat org.apache.zeppelin.interpreter.remote.PooledRemoteClient.callRemoteFunction(PooledRemoteClient.java:108)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:98)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.getFormType(RemoteInterpreter.java:281)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:444)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:72)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:182)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-4:23986#/job/f9e6f1ac3311e5505d1c0533ec821400"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606813415643_1486575965",
+      "id": "paragraph_1606813415643_1486575965",
+      "dateCreated": "2020-12-01 17:03:35.644",
+      "dateStarted": "2020-12-09 10:52:44.647",
+      "dateFinished": "2020-12-09 10:52:46.602",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-01 17:04:44.999",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606813484999_1503057151",
+      "id": "paragraph_1606813484999_1503057151",
+      "dateCreated": "2020-12-01 17:04:44.999",
+      "status": "READY"
+    }
+  ],
+  "name": "supplier-calc",
+  "id": "2FUBENX6E",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "flink-2FUBENX6E": [
+      {
+        "name": "duration",
+        "object": "1 hours 56 minutes 1 seconds",
+        "noteId": "2FUBENX6E",
+        "paragraphId": "paragraph_1606813415643_1486575965"
+      }
+    ]
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

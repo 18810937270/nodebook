@@ -1,0 +1,791 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\nflink.execution.mode yarn\nflink.jm.memory 2048\nflink.tm.memory 2048\nflink.tm.slot 1\nflink.yarn.appName dwd_order_detail\n# 开启Checkpoint，指定两次checkpoint开始调度之间的间隔，单位毫秒\n# 当然，还会受到checkpoint并发数和min-pause影响\nexecution.checkpointing.interval 120000\n# 开始下次Checkpoint时距离上一次Checkpoint完成后的最小时间间隔，单位毫秒\nexecution.checkpointing.min-pause 60000\n# 如果某次Checkpoint超过此阈值还没完成，则将进行中的Checkpoint干掉作废，单位毫秒\nexecution.checkpointing.timeout 60000\n# 当Cancel该job时也保留 Checkpoint，用于作业手动重启\n# 此模式下我们必须在Cancel后需要手动删除Checkpoint文件。\nexecution.checkpointing.externalized-checkpoint-retention RETAIN_ON_CANCELLATION\n\nexecution.max-idle-state-retention 360000\nexecution.min-idle-state-retention 10000\nflink.execution.jars /home/xiaohui.wang/module/zeppelin/jars/flink-formats-1.0-SNAPSHOT.jar\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-29 10:58:07.226",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609158250134_1806855435",
+      "id": "paragraph_1609158250134_1806855435",
+      "dateCreated": "2020-12-28 20:24:10.134",
+      "dateStarted": "2020-12-29 10:58:07.239",
+      "dateFinished": "2020-12-29 10:58:07.247",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS `ods_orders`;\nCREATE TABLE `ods_orders` (\n  `id` BIGINT,\n  `user_id` BIGINT,\n  `city_id` BIGINT,\n  `coupon_id` BIGINT,\n  `courier_id` BIGINT,\n  `order_number` STRING,\n  `batch_order_number` STRING,\n  `coupon_number` STRING,\n  `city` STRING,\n  `channel` INT,\n  `bussiness_type` INT,\n  `type` INT,\n  `status` INT,\n  `distance` INT,\n  `weight` INT,\n  `travel_way` INT,\n  `courier_travel_way` INT,\n  `remark` STRING,\n  `is_merge` INT,\n  `abnormal` INT,\n  `cancelled` INT,\n  `appoint_type` INT,\n  `admin_remark` STRING,\n  `push_times` INT,\n  `ctime` BIGINT,\n  `place_time` BIGINT,\n  `finish_time` BIGINT,\n  `dispatch_type` INT,\n  `category` INT,\n   PRIMARY KEY (id) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092,192.168.40.15:9093,192.168.40.15:9094\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027cityOrderCalc-orders\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n-- \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027,\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027orders\u0027\n );\n DROP TABLE IF EXISTS `ods_payments`;\n CREATE TABLE `ods_payments` (\n  `id` bigint,\n  `order_id` bigint,\n  `user_id` bigint,\n  `order_number` string,\n  `total` int,\n  `discount` int,\n  `coupon` int,\n  `balance` int,\n  `online` int,\n  `cash` int,\n  `merge` int,\n  `drawback` int,\n  `deduct` int,\n  `pay_type` int,\n  `pay_agent` int,\n  `status` int,\n  `ctime` bigint,\n  `utime` bigint,\n  `channel_discount` int,\n  PRIMARY KEY (id) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092,192.168.40.15:9093,192.168.40.15:9094\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027cityOrderCalc-payments\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n-- \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027,\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027payments\u0027\n );\n \n DROP TABLE IF EXISTS `ods_payment_details`;\n CREATE TABLE `ods_payment_details` (\n  `id` bigint,\n  `order_id` bigint,\n  `order_number` string,\n  `order_fee` int,\n  `distance_fee` int,\n  `weight_fee` int,\n  `travel_fee` int,\n  `night_fee` int,\n  `visit_fee` int,\n  `addition_fee` int,\n  `premium_fee` int,\n  `cross_river_fee` int,\n  `extra_fee` int,\n  `drawback` int,\n  `goods_fee` int,\n  `premium_type` int,\n  `premium_amount` decimal(8,4),\n  `premium_reason` string,\n  `appoint_fee` int,\n  PRIMARY KEY (`id`) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092,192.168.40.15:9093,192.168.40.15:9094\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027cityOrderCalc-payment_details\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n-- \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027,\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027payment_details\u0027\n );\n \nDROP TABLE IF EXISTS `dwd_order_detail`;\nCREATE TABLE `dwd_order_detail` (\n  `order_id` BIGINT,\n  `user_id` BIGINT,\n  `city_id` BIGINT,\n  `coupon_id` BIGINT,\n  `courier_id` BIGINT,\n  `order_number` STRING,\n  `batch_order_number` STRING,\n  `coupon_number` STRING,\n  `city` STRING,\n  `channel` INT,\n  `bussiness_type` INT,\n  `type` INT,\n  `status` INT,\n  `distance` INT,\n  `weight` INT,\n  `travel_way` INT,\n  `courier_travel_way` INT,\n  `remark` STRING,\n  `is_merge` INT,\n  `abnormal` INT,\n  `cancelled` INT,\n  `appoint_type` INT,\n  `admin_remark` STRING,\n  `push_times` INT,\n  `ctime` BIGINT,\n  `place_time` BIGINT,\n  `finish_time` BIGINT,\n  `dispatch_type` INT,\n  `category` INT,\n\n  `total` int,\n  `discount` int,\n  `coupon` int,\n  `balance` int,\n  `online` int,\n  `cash` int,\n  `merge` int,\n  `drawback` int,\n  `deduct` int,\n  `pay_type` int,\n  `pay_agent` int,\n  `payment_status` int,\n  `payment_ctime` bigint,\n  `payment_utime` bigint,\n  `channel_discount` int,\n\n  `order_fee` int,\n  `distance_fee` int,\n  `weight_fee` int,\n  `travel_fee` int,\n  `night_fee` int,\n  `visit_fee` int,\n  `addition_fee` int,\n  `premium_fee` int,\n  `cross_river_fee` int,\n  `extra_fee` int,\n  `drawback` int,\n  `goods_fee` int,\n  `premium_type` int,\n  `premium_amount` decimal(8,4),\n  `premium_reason` string,\n  `appoint_fee` int\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027dwd_order_detail\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092,192.168.40.15:9093,192.168.40.15:9094\u0027, \n \u0027format\u0027 \u003d \u0027changelog-json\u0027 ,\n \u0027sink.partitioner\u0027 \u003d \u0027fixed\u0027\n );\n\n \nDROP TABLE IF EXISTS `dws_order_calc`; \nCREATE TABLE `dws_order_calc` (\n  `city_id` BIGINT,\n  `place_time` STRING,\n  `payOrderNum` INT,\n  `receiveOrderNum` BIGINT,\n  `total` INT,\n  `premium_fee` INT,\n  `original_price` INT,\n  `order_num` BIGINT,\n   PRIMARY KEY (city_id,place_time) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027dws_order_calc\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092,192.168.40.15:9093,192.168.40.15:9094\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n \u0027format\u0027 \u003d \u0027changelog-json\u0027 ,\n \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027,\n \u0027sink.partitioner\u0027 \u003d \u0027fixed\u0027\n );\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-29 10:58:09.912",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609158272654_406358000",
+      "id": "paragraph_1609158272654_406358000",
+      "dateCreated": "2020-12-28 20:24:32.654",
+      "dateStarted": "2020-12-29 10:58:09.922",
+      "dateFinished": "2020-12-29 10:58:45.037",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,jobName\u003d\"dws_order_detail\",resumeFromLatestCheckpoint\u003dfalse)\ninsert into dwd_order_detail\nselect\n    o.id as order_id,\n    o.user_id,\n    o.city_id,\n    o.coupon_id,\n    o.courier_id,\n    o.order_number,\n    o.batch_order_number,\n    o.coupon_number,\n    o.city,\n    o.channel,\n    o.bussiness_type,\n    o.type,\n    o.status,\n    o.distance,\n    o.weight,\n    o.travel_way,\n    o.courier_travel_way,\n    o.remark,\n    o.is_merge,\n    o.abnormal,\n    o.cancelled,\n    o.appoint_type,\n    o.admin_remark,\n    o.push_times,\n    o.ctime,\n    o.place_time,\n    o.finish_time,\n    o.dispatch_type,\n    o.category,    \n\n    p.total,\n    p.discount,\n    p.coupon,\n    p.balance,\n    p.online,\n    p.cash,\n    p.`merge`,\n    p.drawback,\n    p.deduct,\n    p.pay_type,\n    p.pay_agent,\n    p.status as payment_status,\n    p.ctime as payment_ctime,\n    p.utime as payment_utime,\n    p.channel_discount,    \n\n    pd.distance_fee,\n    pd.weight_fee,\n    pd.travel_fee,\n    pd.night_fee,\n    pd.visit_fee,\n    pd.addition_fee,\n    pd.premium_fee,\n    pd.cross_river_fee,\n    pd.extra_fee,\n    pd.drawback,\n    pd.goods_fee,\n    pd.premium_type,\n    pd.premium_amount,\n    pd.premium_reason,\n    pd.appoint_fee\nfrom\nods_orders o\njoin\nods_payments p\non o.id\u003d p.order_id\njoin\nods_payment_details pd\non o.id\u003dpd.order_id",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-29 10:59:06.240",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/8cb3c1575ba719270de96ae2ff47cce3/chk-9524",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "ANGULAR",
+            "data": "\u003ch1\u003eDuration: {{duration}} \u003c/h1\u003e\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: insert into dwd_order_detail\nselect\n    o.id as order_id,\n    o.user_id,\n    o.city_id,\n    o.coupon_id,\n    o.courier_id,\n    o.order_number,\n    o.batch_order_number,\n    o.coupon_number,\n    o.city,\n    o.channel,\n    o.bussiness_type,\n    o.type,\n    o.status,\n    o.distance,\n    o.weight,\n    o.travel_way,\n    o.courier_travel_way,\n    o.remark,\n    o.is_merge,\n    o.abnormal,\n    o.cancelled,\n    o.appoint_type,\n    o.admin_remark,\n    o.push_times,\n    o.ctime,\n    o.place_time,\n    o.finish_time,\n    o.dispatch_type,\n    o.category,    \n\n    p.total,\n    p.discount,\n    p.coupon,\n    p.balance,\n    p.online,\n    p.cash,\n    p.`merge`,\n    p.drawback,\n    p.deduct,\n    p.pay_type,\n    p.pay_agent,\n    p.status as payment_status,\n    p.ctime as payment_ctime,\n    p.utime as payment_utime,\n    p.channel_discount,    \n\n    pd.distance_fee,\n    pd.weight_fee,\n    pd.travel_fee,\n    pd.night_fee,\n    pd.visit_fee,\n    pd.addition_fee,\n    pd.premium_fee,\n    pd.cross_river_fee,\n    pd.extra_fee,\n    pd.drawback,\n    pd.goods_fee,\n    pd.premium_type,\n    pd.premium_amount,\n    pd.premium_reason,\n    pd.appoint_fee\nfrom\nods_orders o\njoin\nods_payments p\non o.id\u003d p.order_id\njoin\nods_payment_details pd\non o.id\u003dpd.order_id\njava.io.IOException: java.util.concurrent.ExecutionException: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callInsertInto(FlinkSqlInterrpeter.java:529)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInsertInto(FlinkStreamSqlInterpreter.java:97)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:264)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:846)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:738)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.util.concurrent.ExecutionException: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)\n\tat java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)\n\tat org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.execute(StreamExecutionEnvironment.java:1717)\n\tat org.apache.flink.table.planner.delegation.ExecutorBase.execute(ExecutorBase.java:52)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.execute(TableEnvironmentImpl.java:1214)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callInsertInto(FlinkSqlInterrpeter.java:523)\n\t... 14 more\nCaused by: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$8(FutureUtils.java:302)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:1977)\n\tat org.apache.flink.runtime.rest.RestClient.lambda$submitRequest$1(RestClient.java:342)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:500)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:493)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:472)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:413)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:538)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:531)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:111)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.fulfillConnectPromise(AbstractNioChannel.java:323)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:339)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\t... 1 more\nCaused by: java.util.concurrent.CompletionException: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-3/192.168.40.8:29922\n\tat java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:292)\n\tat java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:308)\n\tat java.util.concurrent.CompletableFuture.uniCompose(CompletableFuture.java:943)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:926)\n\t... 19 more\nCaused by: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-3/192.168.40.8:29922\nCaused by: java.net.ConnectException: Connection refused\n\tat sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)\n\tat sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:327)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:336)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat java.lang.Thread.run(Thread.java:748)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-3:29922#/job/8cb3c1575ba719270de96ae2ff47cce3"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609207476043_986449631",
+      "id": "paragraph_1609207476043_986449631",
+      "dateCreated": "2020-12-29 10:04:36.044",
+      "dateStarted": "2020-12-29 10:59:06.249",
+      "dateFinished": "2021-01-11 16:28:39.730",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,refreshInterval\u003d3000)\nSELECT city_id,\n       FROM_UNIXTIME(place_time/1000,\u0027yyyy-MM-dd\u0027) place_time,\n       COLLECT(order_id) as order_ids\nFROM \ndwd_order_detail\ngroup by city_id,FROM_UNIXTIME(place_time/1000,\u0027yyyy-MM-dd\u0027)\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-03-01 16:46:31.267",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/612ce3cc48ab068394ce31681b831687/chk-8625",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "city_id": "string",
+                      "place_time": "string",
+                      "order_ids": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "city_id\tplace_time\torder_ids\n1101\t2020-10-28\t{11659886\u003d5}\n1101\t2020-12-28\t{11659886\u003d2}\n1101\t2016-06-29\t{11659887\u003d1}\n1101\t2020-12-30\t{15034245\u003d1, 15034247\u003d1, 15034246\u003d1, 15034241\u003d1, 15034240\u003d1, 15034243\u003d1, 15034242\u003d1, 15034253\u003d1, 15034248\u003d1, 15033335\u003d1, 15033334\u003d1, 15033331\u003d1, 15033330\u003d1, 15033336\u003d1}\n1101\t2021-01-04\t{15033521\u003d1, 15033360\u003d1, 15033392\u003d1, 15033363\u003d1, 15033362\u003d1, 15033357\u003d1, 15034285\u003d1, 15033391\u003d1, 15034287\u003d1, 15034281\u003d1, 15034283\u003d1, 15034282\u003d1}\n1101\t2020-12-31\t{15034277\u003d1, 15034276\u003d1, 15034279\u003d1, 15034278\u003d1, 15034273\u003d1, 15034272\u003d4, 15034275\u003d1, 15034274\u003d1, 15033341\u003d1, 15033340\u003d1, 15033343\u003d1, 15033342\u003d1, 15033337\u003d1, 15033339\u003d4, 15033338\u003d1, 15033349\u003d1, 15033348\u003d1, 15033351\u003d1, 15033350\u003d1, 15033345\u003d1, 15033344\u003d1, 15033347\u003d1, 15033346\u003d1, 15033356\u003d1, 15034255\u003d1, 15034254\u003d1, 15033353\u003d1, 15033352\u003d1, 15033355\u003d1, 15034261\u003d1, 15034260\u003d1, 15034263\u003d1, 15034262\u003d1, 15034257\u003d1, 15034256\u003d1, 15034259\u003d1, 15034258\u003d1, 15034269\u003d1, 15034268\u003d1, 15034271\u003d1, 15034270\u003d1, 15034265\u003d36, 15034264\u003d1, 15034267\u003d1, 15034266\u003d1}\n1101\t2021-01-07\t{15033797\u003d1, 15033796\u003d1, 15034695\u003d1, 15033798\u003d1, 15034694\u003d1, 15033793\u003d1, 15033792\u003d1, 15034816\u003d1, 15033795\u003d1, 15033794\u003d1, 15034700\u003d1, 15034697\u003d1, 15034696\u003d1, 15034699\u003d1, 15034698\u003d1, 15033765\u003d1, 15034661\u003d1, 15034660\u003d1, 15033767\u003d1, 15034663\u003d1, 15033766\u003d1, 15033761\u003d1, 15033760\u003d1, 15033773\u003d1, 15034669\u003d1, 15033772\u003d1, 15034668\u003d1, 15033775\u003d1, 15034671\u003d1, 15033774\u003d1, 15034670\u003d1, 15033769\u003d1, 15034665\u003d1, 15033768\u003d1, 15034664\u003d1, 15033771\u003d1, 15034667\u003d1, 15033770\u003d1, 15033781\u003d1, 15034677\u003d1, 15033780\u003d1, 15034676\u003d1, 15034804\u003d1, 15033783\u003d1, 15034679\u003d1, 15034807\u003d1, 15033782\u003d1, 15034806\u003d1, 15033777\u003d1, 15034801\u003d1, 15033776\u003d1, 15034672\u003d1, 15033779\u003d1, 15034803\u003d1, 15033778\u003d1, 15034802\u003d1, 15033789\u003d1, 15034813\u003d1, 15033788\u003d1, 15034812\u003d1, 15033791\u003d1, 15034687\u003d1, 15034815\u003d1, 15033790\u003d1, 15034814\u003d1, 15033785\u003d1, 15034809\u003d1, 15033784\u003d1, 15034808\u003d1, 15033787\u003d1, 15034811\u003d1, 15033786\u003d1, 15034810\u003d1, 15033732\u003d1, 15033735\u003d1, 15033729\u003d1, 15033731\u003d1, 15033741\u003d1, 15033740\u003d1, 15033742\u003d1, 15033737\u003d1, 15033736\u003d1, 15033739\u003d1, 15033738\u003d1, 15033745\u003d1, 15033747\u003d1, 15033746\u003d1, 15033757\u003d1, 15033759\u003d1, 15033755\u003d1}\n1101\t2021-01-06\t{15033701\u003d4, 15033703\u003d1, 15033702\u003d1, 15033581\u003d1, 15033580\u003d1, 15034604\u003d1, 15033583\u003d1, 15033582\u003d1, 15033577\u003d1, 15034601\u003d1, 15033576\u003d1, 15033704\u003d1, 15033579\u003d1, 15033707\u003d1, 15034603\u003d1, 15033578\u003d1, 15033706\u003d1, 15034602\u003d1, 15033717\u003d1, 15033716\u003d1, 15033719\u003d1, 15033590\u003d1, 15033718\u003d1, 15033713\u003d4, 15033584\u003d1, 15033712\u003d4, 15033715\u003d1, 15033586\u003d1, 15033714\u003d1, 108113905433\u003d1, 15033725\u003d1, 15034621\u003d1, 15033724\u003d1, 15034495\u003d1, 15034623\u003d1, 15034622\u003d1, 15033721\u003d1, 15034657\u003d1, 15034629\u003d1, 15034500\u003d1, 15034628\u003d1, 15034631\u003d1, 15034497\u003d1, 15034625\u003d1, 15034496\u003d1, 15034624\u003d1, 15034499\u003d1, 15034627\u003d1, 15034498\u003d1, 15034626\u003d1, 15034637\u003d1, 15034636\u003d1, 15034639\u003d1, 15034638\u003d1, 15034633\u003d1, 15034632\u003d1, 15034635\u003d1, 15034634\u003d1, 15034644\u003d1, 15034641\u003d1, 15034640\u003d4, 15034643\u003d1, 15034642\u003d1, 15034655\u003d1, 106122608389\u003d1, 15034649\u003d1, 15034650\u003d1}\n1101\t2021-01-05\t{15033573\u003d4, 15033572\u003d4, 15034468\u003d1, 15034471\u003d1, 15034470\u003d1, 12317503\u003d1, 15033569\u003d4, 15034465\u003d1, 12317502\u003d1, 15033568\u003d4, 15034464\u003d1, 15033571\u003d4, 15034467\u003d1, 15033570\u003d4, 15034466\u003d1, 15034477\u003d1, 15034476\u003d1, 15034479\u003d1, 15034478\u003d1, 15034473\u003d1, 15034472\u003d1, 15034475\u003d1, 15034474\u003d1, 15034485\u003d1, 15034484\u003d1, 15034487\u003d1, 15034486\u003d1, 15034481\u003d1, 15034480\u003d1, 15034483\u003d1, 15034482\u003d1, 15034493\u003d4, 15034492\u003d4, 20116008\u003d1, 15034494\u003d1, 15034489\u003d4, 15034488\u003d4, 15034491\u003d4, 15034490\u003d4, 15033541\u003d1, 15033543\u003d1, 15033542\u003d1, 15034433\u003d1, 15034432\u003d1, 15034434\u003d1, 15033557\u003d1, 15033556\u003d1, 15034452\u003d1, 15033559\u003d25, 15033558\u003d1, 15033553\u003d1, 20116102\u003d1, 20116103\u003d1, 15034451\u003d1, 15033554\u003d1, 15033565\u003d1, 20116106\u003d1, 15033564\u003d1, 20116107\u003d1, 20116104\u003d4, 15033566\u003d1, 20116105\u003d1, 15033561\u003d1, 15033560\u003d1, 20116108\u003d1, 15033562\u003d1, 20116109\u003d1, 20116208\u003d1, 20116209\u003d4, 15033525\u003d1, 15033523\u003d1, 15033522\u003d1, 20116203\u003d1, 15034431\u003d1, 12317408\u003d1, 20116206\u003d4, 20116204\u003d4, 12317403\u003d1, 12317402\u003d1, 12317406\u003d1, 12317405\u003d1, 12317404\u003d4, 12317504\u003d1}\n1101\t2021-01-08\t{15034533\u003d1, 15034532\u003d1, 15034535\u003d4, 15034534\u003d1, 15034529\u003d9, 15034528\u003d1, 15034530\u003d1, 15034541\u003d1, 15034540\u003d1, 15034542\u003d1, 15034537\u003d1, 15034536\u003d1, 15034539\u003d1, 15034538\u003d1, 15034549\u003d1, 15034548\u003d1, 15034545\u003d1, 15034547\u003d1, 15034546\u003d1, 15034501\u003d4, 15034503\u003d4, 15034502\u003d4, 15034509\u003d1, 15034508\u003d1, 15034511\u003d1, 15034510\u003d1, 15034505\u003d1, 15034504\u003d4, 15034507\u003d1, 15034506\u003d1, 15034517\u003d1, 15034516\u003d1, 15034519\u003d1, 15034518\u003d1, 15034513\u003d1, 15034512\u003d1, 15034515\u003d1, 15034514\u003d1, 15034525\u003d1, 15034526\u003d1, 15034521\u003d1, 15034520\u003d1, 15034523\u003d1, 15034522\u003d1, 15035460\u003d1, 15035462\u003d1, 15035457\u003d4, 15035456\u003d1, 15035471\u003d1, 15035470\u003d1, 15035465\u003d1, 15035464\u003d9, 15035467\u003d1, 15035466\u003d1, 15035476\u003d1, 15035479\u003d1, 15035478\u003d1, 15035473\u003d4, 15035472\u003d16, 15035475\u003d1, 15035474\u003d1, 15035484\u003d1, 15035481\u003d1, 15035480\u003d1, 15035483\u003d1, 15035482\u003d1, 15035429\u003d4, 15035428\u003d4, 15035431\u003d4, 15035430\u003d4, 15035425\u003d1, 15034400\u003d4, 15035424\u003d1, 15035427\u003d4, 15035426\u003d4, 15035437\u003d4, 15035436\u003d4, 15035439\u003d1, 15035438\u003d4, 15035433\u003d4, 15035432\u003d4, 15035435\u003d4, 15035434\u003d4, 15035445\u003d1, 15035444\u003d1, 15035447\u003d1, 15035446\u003d1, 15035441\u003d1, 15035440\u003d1, 15035443\u003d1, 15035442\u003d1, 15035453\u003d1, 15035452\u003d1, 15035455\u003d1, 15035454\u003d1, 15035449\u003d1, 15035448\u003d1, 15035451\u003d1, 15035450\u003d1, 15034373\u003d1, 15034372\u003d1, 15034375\u003d1, 15034374\u003d1, 15034369\u003d1, 15034368\u003d1, 15034371\u003d1, 15034370\u003d1, 15034381\u003d1, 15035405\u003d1, 15034380\u003d1, 15035404\u003d1, 15034383\u003d1, 15035407\u003d1, 15034382\u003d1, 15035406\u003d1, 15034377\u003d1, 15035401\u003d1, 15034376\u003d1, 15034379\u003d1, 15035403\u003d1, 15034378\u003d1, 15035402\u003d1, 15034389\u003d1, 15035413\u003d1, 15034388\u003d4, 15035412\u003d1, 15034391\u003d1, 15035415\u003d1, 15034390\u003d1, 15035414\u003d1, 15034385\u003d1, 15035409\u003d1, 15035408\u003d1, 15034387\u003d4, 15035411\u003d1, 15034386\u003d1, 15035410\u003d1, 15034397\u003d4, 15035421\u003d1, 15034396\u003d4, 15035420\u003d1, 15034399\u003d4, 15035423\u003d1, 15034398\u003d4, 15035422\u003d4, 15034393\u003d4, 15035417\u003d4, 15034392\u003d4, 15035416\u003d4, 15034395\u003d4, 15035419\u003d1, 15034394\u003d4, 15035418\u003d1, 15034855\u003d4, 15034861\u003d1, 15034860\u003d1, 15034863\u003d1, 15034862\u003d25, 15034859\u003d1, 15034869\u003d1, 15034868\u003d1, 15034871\u003d1, 15034870\u003d1, 15034865\u003d1, 15034864\u003d1, 15034867\u003d1, 15034866\u003d1, 15034877\u003d1, 15034876\u003d1, 15034879\u003d1, 15034878\u003d1, 15034873\u003d1, 15034872\u003d1, 15034875\u003d1, 15034874\u003d1, 15033799\u003d1, 15034817\u003d1, 15034831\u003d1, 15033800\u003d1, 15034833\u003d1, 15034832\u003d1, 15034835\u003d1, 15034834\u003d1, 15034101\u003d1, 15034103\u003d4, 15034102\u003d4, 15034109\u003d1, 15034108\u003d1, 15034111\u003d1, 15034110\u003d1, 15034105\u003d4, 15034104\u003d4, 15034107\u003d1, 15034106\u003d4, 15035077\u003d1, 15035076\u003d1, 15035079\u003d1, 15035078\u003d1, 15035073\u003d1, 15035072\u003d4, 15035075\u003d1, 15035074\u003d1, 15035085\u003d1, 15035084\u003d1, 15035087\u003d1, 15035086\u003d1, 15035081\u003d1, 15035080\u003d1, 15035083\u003d1, 15035082\u003d1, 15035095\u003d1, 15035094\u003d1, 15035089\u003d1, 15035088\u003d1, 15035090\u003d1, 15035100\u003d1, 15035097\u003d1, 15035096\u003d1, 15035099\u003d1, 15035098\u003d1, 15035045\u003d1, 15035044\u003d1, 15035047\u003d1, 15035046\u003d1, 15035041\u003d1, 15035040\u003d1, 15035043\u003d1, 15035042\u003d1, 15035053\u003d4, 15035052\u003d4, 15035055\u003d1, 15035054\u003d4, 15035048\u003d1, 15035051\u003d1, 15035050\u003d1, 15035061\u003d1, 15035060\u003d4, 15035063\u003d4, 15035062\u003d4, 15035057\u003d1, 15035056\u003d1, 15035059\u003d4, 15035058\u003d1, 15035069\u003d4, 15035068\u003d4, 15035071\u003d4, 15035070\u003d4, 15035065\u003d4, 15035064\u003d4, 15035067\u003d4, 15035066\u003d4, 15033989\u003d1, 15035013\u003d1, 15033988\u003d1, 15035012\u003d1, 15033991\u003d1, 15033990\u003d1, 15033985\u003d4, 15035009\u003d1, 15033984\u003d1, 15035008\u003d1, 15033987\u003d1, 15035011\u003d1, 15033986\u003d1, 15033997\u003d1, 15035021\u003d1, 15033996\u003d4, 15035020\u003d1, 15033999\u003d4, 15035023\u003d1, 15033998\u003d4, 15035022\u003d1, 15033993\u003d1, 15035017\u003d4, 15033992\u003d4, 15033995\u003d1, 15035019\u003d1, 15033994\u003d1, 15035018\u003d1, 15035029\u003d1, 15035028\u003d1, 15035031\u003d1, 15035025\u003d4, 15034000\u003d1, 15035024\u003d4, 15035027\u003d1, 15035026\u003d1, 15035037\u003d1, 15035036\u003d1, 15035039\u003d1, 15035038\u003d1, 15035033\u003d1, 15035032\u003d4, 15035035\u003d1, 15035034\u003d1, 15033957\u003d1, 15033956\u003d1, 15033958\u003d1, 15033953\u003d1, 15033952\u003d1, 15033955\u003d1, 15033954\u003d1, 15033965\u003d1, 15033964\u003d1, 15033967\u003d1, 15033966\u003d1, 15033961\u003d1, 15033960\u003d1, 15033963\u003d1, 15033962\u003d1, 15033973\u003d1, 15033972\u003d1, 15033975\u003d1, 15033974\u003d4, 15033969\u003d1, 15033968\u003d1, 15033971\u003d1, 15033970\u003d1, 15033981\u003d1, 15035005\u003d1, 15033980\u003d1, 15035004\u003d1, 15033983\u003d1, 15035007\u003d1, 15033982\u003d1, 15035006\u003d1, 15033977\u003d4, 15035001\u003d4, 15033976\u003d1, 15033979\u003d1, 15035003\u003d1, 15033978\u003d1, 15035002\u003d1, 15033921\u003d1, 15033920\u003d1, 15033922\u003d1, 15033941\u003d1, 15033949\u003d1, 15033948\u003d121, 15033951\u003d1, 15033950\u003d1, 15033945\u003d1, 15033944\u003d1, 15033911\u003d1, 15033917\u003d1, 15033916\u003d1, 15033919\u003d1, 15033918\u003d1, 15033913\u003d1, 15033912\u003d1, 15033915\u003d1, 15033914\u003d1, 15034885\u003d1, 15034884\u003d1, 15034887\u003d1, 15034886\u003d1, 15034881\u003d1, 15034880\u003d1, 15034883\u003d1, 15034882\u003d1, 15034893\u003d1, 15034892\u003d1, 15034895\u003d1, 15034894\u003d1, 15034889\u003d4, 15034888\u003d1, 15034891\u003d1, 15034890\u003d1, 15034900\u003d1, 15034897\u003d1, 15034896\u003d1, 15034899\u003d1, 15034898\u003d1, 15034341\u003d4, 15034340\u003d4, 15034343\u003d1, 15034342\u003d1, 15034337\u003d1, 15034336\u003d1, 15034339\u003d1, 15034338\u003d1, 15034349\u003d1, 15034348\u003d4, 15034351\u003d1, 15034350\u003d1, 15034345\u003d1, 15034344\u003d1, 15034347\u003d1, 15034346\u003d1, 15034357\u003d1, 15034356\u003d1, 15034359\u003d1, 15034358\u003d1, 15034355\u003d1, 15034354\u003d4, 15034365\u003d1, 15034364\u003d4, 15034366\u003d1, 15034361\u003d1, 15034360\u003d1, 15034363\u003d4, 15034362\u003d4, 15034305\u003d4, 15034304\u003d1, 15034325\u003d1, 15034324\u003d1, 15034327\u003d1, 15034326\u003d1, 15034321\u003d1, 15034323\u003d1, 15034322\u003d25, 15034333\u003d4, 15034332\u003d1, 15034335\u003d1, 15034334\u003d1, 15034329\u003d1, 15034328\u003d1, 15034331\u003d1, 15034330\u003d1, 15035300\u003d1, 15035297\u003d1, 15035296\u003d4, 15035299\u003d1, 15035298\u003d1, 15034301\u003d1, 15034303\u003d4, 15034302\u003d1, 15035269\u003d1, 15035268\u003d1, 15035271\u003d1, 15035270\u003d1, 15035265\u003d1, 15035264\u003d1, 15035267\u003d1, 15035266\u003d1, 15035277\u003d1, 15035276\u003d1, 15035279\u003d1, 15035278\u003d1, 15035273\u003d1, 15035272\u003d1, 15035275\u003d1, 15035274\u003d1, 15035285\u003d1, 15035284\u003d4, 15035287\u003d4, 15035280\u003d1, 15035283\u003d1, 15035282\u003d1, 15035293\u003d4, 15035292\u003d4, 15035295\u003d1, 15035294\u003d1, 15035289\u003d1, 15035288\u003d4, 15035291\u003d4, 15035290\u003d4, 15035233\u003d1, 15035232\u003d1, 15035253\u003d1, 15035252\u003d1, 15035255\u003d1, 15035254\u003d1, 15035251\u003d1, 15035261\u003d1, 15035260\u003d1, 15035263\u003d1, 15035262\u003d4, 15035257\u003d1, 15035256\u003d1, 15035259\u003d4, 15035258\u003d1, 15034181\u003d1, 15034180\u003d1, 15034182\u003d1, 15035206\u003d1, 15035201\u003d1, 15034179\u003d1, 15035203\u003d1, 15035202\u003d1, 15035213\u003d1, 15035212\u003d1, 15035215\u003d1, 15035214\u003d1, 15035209\u003d1, 15035208\u003d1, 15035211\u003d1, 15035210\u003d1, 15035216\u003d1, 15035231\u003d1, 15034149\u003d1, 15034148\u003d1, 15034151\u003d1, 15034150\u003d1, 15034145\u003d4, 15034144\u003d4, 15034147\u003d1, 15034146\u003d4, 15034157\u003d1, 15034156\u003d1, 15034159\u003d1, 15034158\u003d1, 15034153\u003d1, 15034152\u003d1, 15034155\u003d1, 15034154\u003d1, 15034165\u003d4, 15034164\u003d1, 15034167\u003d1, 15034161\u003d1, 15034160\u003d1, 15034163\u003d1, 15034162\u003d1, 15034173\u003d9, 15034172\u003d1, 15034175\u003d1, 15034174\u003d9, 15034169\u003d1, 15034168\u003d1, 15034117\u003d1, 15034116\u003d1, 15034119\u003d1, 15034118\u003d1, 15034113\u003d1, 15034112\u003d1, 15034115\u003d1, 15034114\u003d1, 15034125\u003d1, 15034124\u003d1, 15034127\u003d4, 15034126\u003d1, 15034121\u003d1, 15034120\u003d1, 15034123\u003d1, 15034122\u003d1, 15034133\u003d4, 15034132\u003d1, 15034135\u003d4, 15034134\u003d4, 15034129\u003d1, 15034128\u003d1, 15034131\u003d1, 15034130\u003d1, 15034141\u003d4, 15034140\u003d4, 15034143\u003d4, 15034142\u003d4, 15034137\u003d4, 15034136\u003d4, 15034139\u003d4, 15034138\u003d4}\n1101\t2021-01-09\t{15035631\u003d1, 15034550\u003d1, 15035633\u003d1, 15035632\u003d1, 15035635\u003d1, 15035634\u003d1, 15035653\u003d1, 15035652\u003d1, 15035655\u003d1, 15035654\u003d1, 15035651\u003d1, 15034701\u003d1, 15034703\u003d1, 15034702\u003d1, 15035657\u003d1, 15035656\u003d1, 15034571\u003d1, 15035658\u003d1, 15034705\u003d1, 15034704\u003d1, 15034707\u003d1, 15034706\u003d1, 15035485\u003d1, 15034591\u003d1, 15035611\u003d1}\n1101\t2021-01-10\t{15034708\u003d1}\n1101\t2021-01-11\t{15034725\u003d1, 15034724\u003d1, 15034727\u003d1, 15034726\u003d1, 15034721\u003d1, 15034720\u003d1, 15034723\u003d1, 15034722\u003d1, 15034733\u003d1, 15034732\u003d1, 15034735\u003d1, 15034734\u003d1, 15034729\u003d1, 15034728\u003d1, 15034731\u003d1, 15034730\u003d1, 15034737\u003d1, 15034736\u003d1, 15035661\u003d1, 15035660\u003d4, 15035663\u003d1, 15035662\u003d1, 15035659\u003d1, 15034709\u003d1, 15035669\u003d1, 15035668\u003d1, 15034711\u003d1, 15035671\u003d1, 15034710\u003d1, 15035670\u003d1, 15035665\u003d1, 15035664\u003d1, 15035667\u003d1, 15035666\u003d1, 15034717\u003d1, 15034716\u003d1, 15034719\u003d1, 15034718\u003d1, 15034713\u003d1, 15034712\u003d1, 15035672\u003d1, 15034715\u003d1, 15034714\u003d1}\n11022\t1970-01-01\t{11659886\u003d2}\n1201\t2020-12-30\t{15033329\u003d1, 15034244\u003d1}\n1201\t2020-12-31\t{15033354\u003d9}\n1201\t2021-01-04\t{15034280\u003d4, 15033358\u003d1}\n1201\t2021-01-05\t{15034469\u003d1, 15033555\u003d1}\n1201\t2021-01-06\t{15033589\u003d1, 15034605\u003d1, 15034607\u003d1, 15034606\u003d1, 15034608\u003d1}\n1201\t2021-01-08\t{15035461\u003d1, 15033959\u003d1, 15034177\u003d1, 15034176\u003d1, 15034531\u003d1, 15035459\u003d1, 15034178\u003d1, 15035010\u003d1, 15035458\u003d1, 15035469\u003d1, 15035468\u003d1, 15035049\u003d1, 15035093\u003d1, 15035092\u003d1, 15034166\u003d1, 15035030\u003d1, 15035281\u003d1, 15034384\u003d1, 15035091\u003d1, 15034524\u003d1, 15034367\u003d1}\n1301\t2020-12-30\t{15033333\u003d1, 15033332\u003d1}\n1301\t2021-01-04\t{15034289\u003d1, 15034284\u003d1}\n1301\t2021-01-05\t{15033524\u003d1}\n1301\t2021-01-06\t{15034648\u003d1}\n1301\t2021-01-08\t{15035463\u003d1, 15034527\u003d1, 15034171\u003d1, 15034170\u003d1}\n1401\t2021-01-06\t{15033705\u003d1}\n1407\t2021-01-06\t{15034609\u003d1}\n2201\t2021-01-08\t{15034836\u003d1}\n3101\t2020-12-30\t{15034252\u003d1, 15034249\u003d1, 15034251\u003d1, 15034250\u003d1}\n3101\t2021-01-05\t{12317309\u003d1, 15033567\u003d1, 15033563\u003d1}\n3101\t2021-01-06\t{15033575\u003d1, 15033574\u003d1}\n3101\t2021-01-07\t{15034658\u003d1}\n3101\t2021-01-08\t{15035205\u003d1, 15035015\u003d1, 15035014\u003d1, 15035286\u003d1, 15034353\u003d1, 15034352\u003d1, 15034543\u003d1, 15035016\u003d1}\n3408\t2021-01-06\t{15034630\u003d1, 15033728\u003d1, 15034656\u003d1, 15033709\u003d1, 15033708\u003d1, 15033711\u003d1, 15033710\u003d1, 15034645\u003d1, 15034647\u003d1, 15034646\u003d1, 15034653\u003d1, 15034652\u003d1, 15033727\u003d1, 15033726\u003d1, 15034654\u003d1, 15033720\u003d1, 15033723\u003d1, 15034651\u003d1, 15033722\u003d1}\n3408\t2021-01-07\t{15034662\u003d1, 15034659\u003d1, 15033762\u003d1, 15034666\u003d1, 15034678\u003d1, 15034673\u003d1, 15034675\u003d1, 15034674\u003d1, 15034685\u003d1, 15034684\u003d1, 15034686\u003d1, 15034681\u003d1, 15034680\u003d1, 15034683\u003d1, 15034682\u003d1, 15033733\u003d1, 15034693\u003d1, 15034692\u003d1, 15033734\u003d1, 15034689\u003d1, 15034688\u003d1, 15034691\u003d1, 15033730\u003d1, 15034690\u003d1, 15033743\u003d1, 15033749\u003d1, 15033748\u003d1, 15033751\u003d1, 15033750\u003d1, 15033744\u003d1, 15033756\u003d1, 15033758\u003d1, 15033753\u003d1, 15033752\u003d1, 15033754\u003d1}\n3501\t2021-01-05\t{20116113\u003d1, 12317407\u003d1, 20116207\u003d1, 20116205\u003d1}\n4105\t2021-01-04\t{15033359\u003d1, 15034286\u003d1, 15033361\u003d1, 15034288\u003d1}\n4105\t2021-01-06\t{15033585\u003d1, 15033588\u003d1, 15033587\u003d1}\n4105\t2021-01-07\t{15033764\u003d1, 15033763\u003d1}\n4105\t2021-01-08\t{15034853\u003d1, 15034852\u003d1, 15035207\u003d1, 15034854\u003d1, 15034851\u003d1, 15034857\u003d1, 15034856\u003d1, 15034858\u003d1, 15034837\u003d1, 15033943\u003d1, 15033942\u003d1, 15034838\u003d1, 15034544\u003d1, 15033947\u003d1, 15033946\u003d1}\n4201\t2021-01-08\t{15035477\u003d1, 15035204\u003d1}\n4601\t2021-01-05\t{20116110\u003d1, 20116111\u003d1, 20116112\u003d1}\n6201\t2021-01-07\t{15034805\u003d1}\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: SELECT city_id,\n       FROM_UNIXTIME(place_time/1000,\u0027yyyy-MM-dd\u0027) place_time,\n       COLLECT(order_id) as order_ids\nFROM \ndwd_order_detail\ngroup by city_id,FROM_UNIXTIME(place_time/1000,\u0027yyyy-MM-dd\u0027)\njava.io.IOException: Fail to run stream sql job\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:172)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:105)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInnerSelect(FlinkStreamSqlInterpreter.java:89)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callSelect(FlinkSqlInterrpeter.java:494)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:257)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:846)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:738)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.util.concurrent.ExecutionException: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)\n\tat java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)\n\tat org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.execute(StreamExecutionEnvironment.java:1717)\n\tat org.apache.flink.table.planner.delegation.ExecutorBase.execute(ExecutorBase.java:52)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.execute(TableEnvironmentImpl.java:1214)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:161)\n\t... 16 more\nCaused by: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$8(FutureUtils.java:302)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:1977)\n\tat org.apache.flink.runtime.rest.RestClient.lambda$submitRequest$1(RestClient.java:342)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:500)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:493)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:472)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:413)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:538)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:531)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:111)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.fulfillConnectPromise(AbstractNioChannel.java:323)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:339)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\t... 1 more\nCaused by: java.util.concurrent.CompletionException: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-3/192.168.40.8:29922\n\tat java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:292)\n\tat java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:308)\n\tat java.util.concurrent.CompletableFuture.uniCompose(CompletableFuture.java:943)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:926)\n\t... 19 more\nCaused by: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-3/192.168.40.8:29922\nCaused by: java.net.ConnectException: Connection refused\n\tat sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)\n\tat sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:327)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:336)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat java.lang.Thread.run(Thread.java:748)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-3:29922#/job/612ce3cc48ab068394ce31681b831687"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609158561356_1213683290",
+      "id": "paragraph_1609158561356_1213683290",
+      "dateCreated": "2020-12-28 20:29:21.356",
+      "dateStarted": "2020-12-30 16:57:30.306",
+      "dateFinished": "2021-01-11 16:28:39.730",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,refreshInterval\u003d3000)\nselect \n  o.city_id,\n  FROM_UNIXTIME(o.place_time/1000,\u0027yyyyMMddHHmm\u0027) placeTime,\n  sum(if(o.status\u003e15,1,0)) AS payOrderNum,\n  count(o.courier_id) AS receiveOrderNum,\n  sum(p.total) AS total,\n  sum(pd.premium_fee) AS premium_fee,\n  sum(p.total-pd.premium_fee) AS original_price,\n  count(*) AS order_num\nFROM \n(\n  select \n    id,\n    last_value(city_id) as city_id,\n    last_value(status) as status,\n    last_value(courier_id) as courier_id,\n    last_value(place_time) as place_time\n  from ods_orders\n  group by id\n)o\njoin\n(\n  select \n    order_id,sum(total) as total\n  from\n  (\n    select \n      id,\n      last_value(total) as total,\n      last_value(order_id) as order_id\n    from\n      ods_payments\n    group by id\n  )t group by order_id\n)p\non o.id \u003d p.order_id\njoin\n(\n  select \n    order_id,sum(premium_fee) as premium_fee\n  from\n  (\n    select \n      id,\n      last_value(premium_fee) as premium_fee,\n      last_value(order_id) as order_id\n    from\n      ods_payment_details\n    group by id\n  )t group by order_id \n)pd\non o.id \u003d pd.order_id\nwhere FROM_UNIXTIME(o.place_time/1000,\u0027yyyyMMddHHmm\u0027)\u003d\u0027202012181620\u0027\nGROUP by o.city_id,FROM_UNIXTIME(o.place_time/1000,\u0027yyyyMMddHHmm\u0027)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-29 14:52:23.338",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/21ecbff4e6a7289658d2b04c7a3e12b2/chk-74",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "id0",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "user_id1",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "city_id2",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "coupon_id3",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "courier_id4",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "order_number5",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "batch_order_number6",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "coupon_number7",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "city8",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "channel9",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "bussiness_type10",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "type11",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "status12",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "distance13",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "weight14",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "travel_way15",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "courier_travel_way16",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "remark17",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "is_merge18",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "abnormal19",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "cancelled20",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "appoint_type21",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "admin_remark22",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "push_times23",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "ctime24",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "place_time25",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "finish_time26",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "dispatch_type27",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "category28",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "city_id": "string",
+                      "placeTime": "string",
+                      "payOrderNum": "string",
+                      "receiveOrderNum": "string",
+                      "total": "string",
+                      "premium_fee": "string",
+                      "original_price": "string",
+                      "order_num": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "city_id\tplaceTime\tpayOrderNum\treceiveOrderNum\ttotal\tpremium_fee\toriginal_price\torder_num\n1101\t202012181620\t1\t1\t20\t600\t-580\t1\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: select \n  o.city_id,\n  FROM_UNIXTIME(o.place_time/1000,\u0027yyyyMMddHHmm\u0027) placeTime,\n  sum(if(o.status\u003e15,1,0)) AS payOrderNum,\n  count(o.courier_id) AS receiveOrderNum,\n  sum(p.total) AS total,\n  sum(pd.premium_fee) AS premium_fee,\n  sum(p.total-pd.premium_fee) AS original_price,\n  count(*) AS order_num\nFROM \n(\n  select \n    id,\n    last_value(city_id) as city_id,\n    last_value(status) as status,\n    last_value(courier_id) as courier_id,\n    last_value(place_time) as place_time\n  from ods_orders\n  group by id\n)o\njoin\n(\n  select \n    order_id,sum(total) as total\n  from\n  (\n    select \n      id,\n      last_value(total) as total,\n      last_value(order_id) as order_id\n    from\n      ods_payments\n    group by id\n  )t group by order_id\n)p\non o.id \u003d p.order_id\njoin\n(\n  select \n    order_id,sum(premium_fee) as premium_fee\n  from\n  (\n    select \n      id,\n      last_value(premium_fee) as premium_fee,\n      last_value(order_id) as order_id\n    from\n      ods_payment_details\n    group by id\n  )t group by order_id \n)pd\non o.id \u003d pd.order_id\nwhere FROM_UNIXTIME(o.place_time/1000,\u0027yyyyMMddHHmm\u0027)\u003d\u0027202012181620\u0027\nGROUP by o.city_id,FROM_UNIXTIME(o.place_time/1000,\u0027yyyyMMddHHmm\u0027)\njava.io.IOException: Fail to run stream sql job\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:172)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:105)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInnerSelect(FlinkStreamSqlInterpreter.java:89)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callSelect(FlinkSqlInterrpeter.java:494)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:257)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:846)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:738)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.util.concurrent.ExecutionException: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: 21ecbff4e6a7289658d2b04c7a3e12b2)\n\tat java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)\n\tat java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)\n\tat org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.execute(StreamExecutionEnvironment.java:1717)\n\tat org.apache.flink.table.planner.delegation.ExecutorBase.execute(ExecutorBase.java:52)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.execute(TableEnvironmentImpl.java:1214)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:161)\n\t... 16 more\nCaused by: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: 21ecbff4e6a7289658d2b04c7a3e12b2)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:116)\n\tat java.util.concurrent.CompletableFuture.uniApply(CompletableFuture.java:602)\n\tat java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:577)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1962)\n\tat org.apache.flink.client.program.rest.RestClusterClient.lambda$pollResourceAsync$22(RestClusterClient.java:602)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1962)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$8(FutureUtils.java:309)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.postFire(CompletableFuture.java:561)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:929)\n\tat java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:442)\n\t... 3 more\nCaused by: org.apache.flink.runtime.client.JobCancellationException: Job was cancelled.\n\tat org.apache.flink.runtime.jobmaster.JobResult.toJobExecutionResult(JobResult.java:149)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:114)\n\t... 19 more\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-3:29922#/job/21ecbff4e6a7289658d2b04c7a3e12b2"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609158651301_11385446",
+      "id": "paragraph_1609158651301_11385446",
+      "dateCreated": "2020-12-28 20:30:51.302",
+      "dateStarted": "2020-12-29 11:42:32.442",
+      "dateFinished": "2020-12-29 14:11:54.078",
+      "status": "ABORT"
+    },
+    {
+      "text": "%flink.bsql(type\u003dupdate,refreshInterval\u003d3000)\nselect count(1)\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-31 16:24:16.182",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/46d63b2e4146b68b0104455861dc503c/chk-1",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "function": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: select count(1)\njava.lang.IllegalArgumentException: Checkpoint is not supported for batch jobs.\n\tat org.apache.flink.table.planner.utils.ExecutorUtils.setBatchProperties(ExecutorUtils.java:84)\n\tat org.apache.flink.table.planner.delegation.BatchExecutor.createPipeline(BatchExecutor.java:51)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.executeInternal(TableEnvironmentImpl.java:734)\n\tat org.apache.flink.table.api.internal.TableImpl.execute(TableImpl.java:570)\n\tat org.apache.zeppelin.flink.Flink111Shims.collectToList(Flink111Shims.java:175)\n\tat org.apache.zeppelin.flink.FlinkZeppelinContext.showData(FlinkZeppelinContext.scala:115)\n\tat org.apache.zeppelin.interpreter.ZeppelinContext.showData(ZeppelinContext.java:67)\n\tat org.apache.zeppelin.flink.FlinkBatchSqlInterpreter.callInnerSelect(FlinkBatchSqlInterpreter.java:60)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callSelect(FlinkSqlInterrpeter.java:494)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:257)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:846)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:738)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609158752134_1792689113",
+      "id": "paragraph_1609158752134_1792689113",
+      "dateCreated": "2020-12-28 20:32:32.134",
+      "dateStarted": "2020-12-31 16:24:16.188",
+      "dateFinished": "2020-12-31 16:24:17.150",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,refreshInterval\u003d3000)\nselect * from dws_order_calc where place_time\u003d\u00272020-12-28\u0027",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-28 21:32:16.636",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/8a04ab6d8b566b389fba913daeb5ec6f/chk-382",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.lang.RuntimeException: Fail to callRemoteFunction, because connection is broken\n\tat org.apache.zeppelin.interpreter.remote.PooledRemoteClient.callRemoteFunction(PooledRemoteClient.java:108)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:98)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:208)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:490)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:72)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:182)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-2:27205#/job/8a04ab6d8b566b389fba913daeb5ec6f"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609161562157_2113539299",
+      "id": "paragraph_1609161562157_2113539299",
+      "dateCreated": "2020-12-28 21:19:22.158",
+      "dateStarted": "2020-12-28 21:32:16.640",
+      "dateFinished": "2020-12-29 10:16:24.901",
+      "status": "ABORT"
+    },
+    {
+      "text": "%flink.ssql\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-28 20:42:55.757",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1609159375756_1856249120",
+      "id": "paragraph_1609159375756_1856249120",
+      "dateCreated": "2020-12-28 20:42:55.757",
+      "status": "READY"
+    }
+  ],
+  "name": "orderCalc",
+  "id": "2FVUB6TP1",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "flink-2FVUB6TP1": [
+      {
+        "name": "duration",
+        "object": "13 days 5 hours 28 minutes 25 seconds",
+        "noteId": "2FVUB6TP1",
+        "paragraphId": "paragraph_1609207476043_986449631"
+      }
+    ]
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": true
+  },
+  "info": {}
+}

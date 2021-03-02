@@ -1,0 +1,231 @@
+{
+  "paragraphs": [
+    {
+      "text": "%angular \u003cdiv id\u003d\u0027angularTestButton\u0027 ng-click\u003d\u0027myVar\u003dmyVar+1\u0027\u003eBindingTest_{{myVar}}_\u003c/div\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 17:39:18.522",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "ANGULAR",
+            "data": "\u003cdiv id\u003d\u0027angularTestButton\u0027 ng-click\u003d\u0027myVar\u003dmyVar+1\u0027\u003eBindingTest_{{myVar}}_\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602754757310_1862774202",
+      "id": "paragraph_1602754757310_1862774202",
+      "dateCreated": "2020-10-15 17:39:17.310",
+      "dateStarted": "2020-10-15 17:39:18.533",
+      "dateFinished": "2020-10-15 17:39:18.561",
+      "status": "FINISHED"
+    },
+    {
+      "text": "z.angularBind(\"myVar\", 1)",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 17:41:15.755",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/undefined",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602754758527_1806245009",
+      "id": "paragraph_1602754758527_1806245009",
+      "dateCreated": "2020-10-15 17:39:18.527",
+      "dateStarted": "2020-10-15 17:41:15.755",
+      "dateFinished": "2020-10-15 17:41:15.973",
+      "status": "FINISHED"
+    },
+    {
+      "text": "print(\"myVar\u003d\"+z.angular(\"myVar\"))",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 17:39:36.633",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "myVar\u003dnull"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602754759960_636527446",
+      "id": "paragraph_1602754759960_636527446",
+      "dateCreated": "2020-10-15 17:39:19.960",
+      "dateStarted": "2020-10-15 17:40:43.033",
+      "dateFinished": "2020-10-15 17:40:43.449",
+      "status": "FINISHED"
+    },
+    {
+      "text": "z.angularWatch(\"myVar\", (before:Object, after:Object, context:org.apache.zeppelin.interpreter.InterpreterContext)\u003d\u003e{ z.run(2, false)})",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 17:40:09.721",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602754776636_289412664",
+      "id": "paragraph_1602754776636_289412664",
+      "dateCreated": "2020-10-15 17:39:36.636",
+      "dateStarted": "2020-10-15 17:40:09.726",
+      "dateFinished": "2020-10-15 17:40:10.329",
+      "status": "FINISHED"
+    },
+    {
+      "text": "z.angularUnbind(\"myVar\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 17:41:14.341",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602754809725_1971954663",
+      "id": "paragraph_1602754809725_1971954663",
+      "dateCreated": "2020-10-15 17:40:09.725",
+      "dateStarted": "2020-10-15 17:41:14.350",
+      "dateFinished": "2020-10-15 17:41:14.619",
+      "status": "FINISHED"
+    },
+    {
+      "user": "anonymous",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1602754874348_4473022",
+      "id": "paragraph_1602754874348_4473022",
+      "dateCreated": "2020-10-15 17:41:14.348",
+      "status": "READY"
+    }
+  ],
+  "name": "Untitled Note 4",
+  "id": "2FPDVH2V6",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark-shared_process": [
+      {
+        "name": "myVar",
+        "object": 1.0,
+        "noteId": "2FPDVH2V6"
+      }
+    ]
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

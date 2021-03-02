@@ -1,0 +1,313 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\nflink.execution.mode yarn\nflink.jm.memory 2048\nflink.tm.memory 2048\nflink.tm.slot 1\nflink.yarn.appName flink-sql-demo\nflink.execution.parallelism 10\n# 开启Checkpoint，指定两次checkpoint开始调度之间的间隔，单位毫秒\n# 当然，还会受到checkpoint并发数和min-pause影响\nexecution.checkpointing.interval 120000\n# 开始下次Checkpoint时距离上一次Checkpoint完成后的最小时间间隔，单位毫秒\nexecution.checkpointing.min-pause 60000\n# 如果某次Checkpoint超过此阈值还没完成，则将进行中的Checkpoint干掉作废，单位毫秒\nexecution.checkpointing.timeout 60000\n# 当Cancel该job时也保留 Checkpoint，用于作业手动重启\n# 此模式下我们必须在Cancel后需要手动删除Checkpoint文件。\nexecution.checkpointing.externalized-checkpoint-retention RETAIN_ON_CANCELLATION\n# 从Checkpoint或Savepoint恢复时使用\n# execution.savepoint.path hdfs:/flink/flink-checkpoints/a84fccc7d3ff03f0c111bb98e176e1da/chk-1\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-10 19:13:27.132",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606270861967_505475353",
+      "id": "paragraph_1606270861967_505475353",
+      "dateCreated": "2020-11-25 10:21:01.967",
+      "dateStarted": "2020-12-10 19:13:27.145",
+      "dateFinished": "2020-12-10 19:13:27.150",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS `ods_order_detail`;\nCREATE TABLE `ods_order_detail`(\n  `id` BIGINT,\n  `order_id` BIGINT,\n  `sku_id` BIGINT, \n  `sku_name` STRING,\n  `img_url` STRING,\n  `order_price` DECIMAL(10,2),\n  `sku_num` INT,\n  `create_time` TIMESTAMP(0)\n) WITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,  -- this is single comment\n \u0027topic\u0027 \u003d \u0027order_detail\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n \u0027format\u0027 \u003d \u0027canal-json\u0027 ,\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027 \n) ; \n/*\nthis is multiple\ncomment line\n*/\nDROP TABLE IF EXISTS `ods_order_info`;\nCREATE TABLE `ods_order_info` (\n  `id` BIGINT,\n  `consignee` STRING,\n  `consignee_tel` STRING,\n  `total_amount` DECIMAL(10,2),\n  `order_status` STRING,\n  `user_id` BIGINT,\n  `payment_way` STRING,\n  `delivery_address` STRING,\n  `order_comment` STRING,\n  `out_trade_no` STRING,\n  `trade_body` STRING,\n  `create_time` TIMESTAMP(0) ,\n  `operate_time` TIMESTAMP(0) ,\n  `expire_time` TIMESTAMP(0) ,\n  `tracking_no` STRING,\n  `parent_order_id` BIGINT,\n  `img_url` STRING,\n  `province_id` INT\n) WITH(\n\u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027order_info\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup\u0027,\n \u0027format\u0027 \u003d \u0027canal-json\u0027 ,\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027 \n) ;\nDROP TABLE IF EXISTS dwd_paid_order_detail;\nCREATE TABLE dwd_paid_order_detail\n(\n  detail_id BIGINT,\n  order_id BIGINT,\n  user_id BIGINT,\n  province_id INT,\n  sku_id BIGINT,\n  sku_name STRING,\n  sku_num INT,\n  order_price DECIMAL(10,2),\n  create_time TIMESTAMP(0),\n  pay_time TIMESTAMP(0)\n ) WITH (\n    \u0027connector\u0027 \u003d \u0027kafka\u0027,\n    \u0027topic\u0027 \u003d \u0027dwd_paid_order_detail\u0027,\n    \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n    \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n    \u0027format\u0027 \u003d \u0027changelog-json\u0027\n);",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-10 19:13:29.428",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606270991917_623233265",
+      "id": "paragraph_1606270991917_623233265",
+      "dateCreated": "2020-11-25 10:23:11.918",
+      "dateStarted": "2020-12-10 19:13:29.434",
+      "dateFinished": "2020-12-10 19:13:30.131",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,runAsOne\u003dtrue,refreshInterval\u003d1000,threshold\u003d60000,parallelism\u003d4)\nset table.exec.window-agg.buffer-size-limit\u003d200000;\n\nINSERT INTO dwd_paid_order_detail\nSELECT\n  od.id detail_id,\n  oi.id order_id,\n  oi.user_id,\n  oi.province_id,\n  od.sku_id,\n  od.sku_name,\n  od.sku_num,\n  od.order_price,\n  oi.create_time,\n  oi.operate_time pay_time\nFROM\n    (\n    SELECT * FROM\n    (\n      SELECT *,ROW_NUMBER() OVER (PARTITION BY id ORDER BY operate_time DESC) as rowNum\n      FROM ods_order_info WHERE order_status \u003d \u00272\u0027 -- 已支付\n    )t where rowNum \u003d1\n    \n    ) oi JOIN\n    (\n    SELECT *\n    FROM ods_order_detail\n    ) od \n    ON oi.id \u003d od.order_id;",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-10 19:13:34.729",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/63bbdbf4f5f9be2cf45701c2921607e3/chk-2798",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "ANGULAR",
+            "data": "\u003ch1\u003eDuration: {{duration}} \u003c/h1\u003e\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "java.util.concurrent.ExecutionException: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)\n\tat java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)\n\tat org.apache.zeppelin.flink.Flink111Shims.executeMultipleInsertInto(Flink111Shims.java:192)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:171)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:846)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:738)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$8(FutureUtils.java:302)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:1977)\n\tat org.apache.flink.runtime.rest.RestClient.lambda$submitRequest$1(RestClient.java:342)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:500)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:493)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:472)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:413)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:538)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:531)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:111)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.fulfillConnectPromise(AbstractNioChannel.java:323)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:339)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\t... 1 more\nCaused by: java.util.concurrent.CompletionException: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-5/192.168.40.48:31750\n\tat java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:292)\n\tat java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:308)\n\tat java.util.concurrent.CompletableFuture.uniCompose(CompletableFuture.java:943)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:926)\n\t... 19 more\nCaused by: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-5/192.168.40.48:31750\nCaused by: java.net.ConnectException: Connection refused\n\tat sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)\n\tat sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:327)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:336)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-5:31750#/job/63bbdbf4f5f9be2cf45701c2921607e3"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606271539017_1103425377",
+      "id": "paragraph_1606271539017_1103425377",
+      "dateCreated": "2020-11-25 10:32:19.017",
+      "dateStarted": "2020-12-14 16:13:28.187",
+      "dateFinished": "2020-12-14 16:30:55.236",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate,runAsOne\u003dtrue,refreshInterval\u003d1000,threshold\u003d60000,parallelism\u003d2)\nSELECT\ndetail_id,\norder_id,\nuser_id,\nprovince_id,\nsku_id,\nsku_name,\nsku_num,\norder_price,\ncreate_time,\npay_time\nfrom\ndwd_paid_order_detail;",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-10 19:13:53.757",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/fc066cb9566d35e77cb98c4f840a5247/chk-2798",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "detail_id\torder_id\tuser_id\tprovince_id\tsku_id\tsku_name\tsku_num\torder_price\tcreate_time\tpay_time\n1052\t370\t11101\t9\t5\t十月稻田 沁州黄小米 (黄小米 五谷杂粮 山西特产 真空装 大米伴侣 粥米搭档) 2.5kg\t2\t11.000000000000000000\t2019-11-23T22:11:48\t2019-11-23T22:28:01\n1053\t370\t11101\t9\t4\t小米Play 流光渐变AI双摄 4G1B+64GB 梦幻蓝 全网通4G 双卡双待 小水滴全面屏拍照游戏智能手机\t2\t10.000000000000000000\t2019-11-23T22:11:48\t2019-11-23T22:28:01\nnull\t22800001\t123\tnull\tnull\tnull\tnull\tnull\tnull\tnull\nnull\t22800001\t123\tnull\tnull\tnull\tnull\tnull\tnull\tnull\nnull\t22800002\t123\tnull\tnull\tnull\tnull\tnull\tnull\tnull\nnull\t22800002\t123\tnull\tnull\tnull\tnull\tnull\tnull\tnull\nnull\t22800003\t123\tnull\tnull\tnull\tnull\tnull\tnull\tnull\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: SELECT\ndetail_id,\norder_id,\nuser_id,\nprovince_id,\nsku_id,\nsku_name,\nsku_num,\norder_price,\ncreate_time,\npay_time\nfrom\ndwd_paid_order_detail\njava.io.IOException: Fail to run stream sql job\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:172)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:105)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInnerSelect(FlinkStreamSqlInterpreter.java:89)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callSelect(FlinkSqlInterrpeter.java:494)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:257)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:846)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:738)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.util.concurrent.ExecutionException: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)\n\tat java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)\n\tat org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.execute(StreamExecutionEnvironment.java:1717)\n\tat org.apache.flink.table.planner.delegation.ExecutorBase.execute(ExecutorBase.java:52)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.execute(TableEnvironmentImpl.java:1214)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:161)\n\t... 16 more\nCaused by: org.apache.flink.runtime.concurrent.FutureUtils$RetryException: Could not complete the operation. Number of retries has been exhausted.\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$8(FutureUtils.java:302)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:1977)\n\tat org.apache.flink.runtime.rest.RestClient.lambda$submitRequest$1(RestClient.java:342)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:500)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:493)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:472)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:413)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:538)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:531)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:111)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.fulfillConnectPromise(AbstractNioChannel.java:323)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:339)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\t... 1 more\nCaused by: java.util.concurrent.CompletionException: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-5/192.168.40.48:31750\n\tat java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:292)\n\tat java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:308)\n\tat java.util.concurrent.CompletableFuture.uniCompose(CompletableFuture.java:943)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:926)\n\t... 19 more\nCaused by: org.apache.flink.shaded.netty4.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: bigdata-dev-node-5/192.168.40.48:31750\nCaused by: java.net.ConnectException: Connection refused\n\tat sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)\n\tat sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:327)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:336)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:685)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:632)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:549)\n\tat org.apache.flink.shaded.netty4.io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:511)\n\tat org.apache.flink.shaded.netty4.io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:918)\n\tat org.apache.flink.shaded.netty4.io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat java.lang.Thread.run(Thread.java:748)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-5:31750#/job/fc066cb9566d35e77cb98c4f840a5247"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606276278618_997391084",
+      "id": "paragraph_1606276278618_997391084",
+      "dateCreated": "2020-11-25 11:51:18.618",
+      "dateStarted": "2020-12-14 16:13:28.389",
+      "dateFinished": "2020-12-14 16:30:55.242",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql(type\u003dupdate)\n\n\n\n\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-10 15:02:06.649",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "EXPR$0": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Invalid Sql statement: String sql\u003d\"CREATE TABLE orders (`id` int,`name` string \" +\n\t\t\t\t\") WITH (\" +\n\t\t\t\t\"\u0027connector\u0027 \u003d \u0027jdbc\u0027,\u0027url\u0027\u003d\u0027jdbc:mysql://bigdata-dev-db-1:3306/datawarehouse_test\u0027,\" +\n\t\t\t\t\"\u0027table-name\u0027 \u003d \u0027run_table\u0027,\u0027username\u0027 \u003d \u0027root\u0027,\u0027password\u0027 \u003d \u0027iss_root\u0027)\"\nThe following commands are available:\n\nCREATE TABLE\t\tCreate table under current catalog and database.\nDROP TABLE\t\tDrop table with optional catalog and database. Syntax: \u0027DROP TABLE [IF EXISTS] \u003cname\u003e;\u0027\nCREATE VIEW\t\tCreates a virtual table from a SQL query. Syntax: \u0027CREATE VIEW \u003cname\u003e AS \u003cquery\u003e;\u0027\nDESCRIBE\t\tDescribes the schema of a table with the given name.\nDROP VIEW\t\tDeletes a previously created virtual table. Syntax: \u0027DROP VIEW \u003cname\u003e;\u0027\nEXPLAIN\t\tDescribes the execution plan of a query or table with the given name.\nHELP\t\tPrints the available commands.\nINSERT INTO\t\tInserts the results of a SQL SELECT query into a declared table sink.\nINSERT OVERWRITE\t\tInserts the results of a SQL SELECT query into a declared table sink and overwrite existing data.\nSELECT\t\tExecutes a SQL SELECT query on the Flink cluster.\nSET\t\tSets a session configuration property. Syntax: \u0027SET \u003ckey\u003e\u003d\u003cvalue\u003e;\u0027. Use \u0027SET;\u0027 for listing all properties.\nSHOW FUNCTIONS\t\tShows all user-defined and built-in functions.\nSHOW TABLES\t\tShows all registered tables.\nSOURCE\t\tReads a SQL SELECT query from a file and executes it on the Flink cluster.\nUSE CATALOG\t\tSets the current catalog. The current database is set to the catalog\u0027s default one. Experimental! Syntax: \u0027USE CATALOG \u003cname\u003e;\u0027\nUSE\t\tSets the current default database. Experimental! Syntax: \u0027USE \u003cname\u003e;\u0027\n\nHint: Make sure that a statement ends with \u0027;\u0027 for finalizing (multi-line) statements."
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1606287813468_2082773295",
+      "id": "paragraph_1606287813468_2082773295",
+      "dateCreated": "2020-11-25 15:03:33.468",
+      "dateStarted": "2020-12-10 15:01:43.592",
+      "dateFinished": "2020-12-10 15:01:44.189",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink.ssql\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-10 11:11:00.122",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1607569860122_1844213524",
+      "id": "paragraph_1607569860122_1844213524",
+      "dateCreated": "2020-12-10 11:11:00.122",
+      "status": "READY"
+    }
+  ],
+  "name": "flink-sql-demo",
+  "id": "2FSSB2TKS",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "flink-2FSSB2TKS": [
+      {
+        "name": "duration",
+        "object": "3 days 21 hours 16 minutes 10 seconds",
+        "noteId": "2FSSB2TKS",
+        "paragraphId": "paragraph_1606271539017_1103425377"
+      }
+    ]
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
