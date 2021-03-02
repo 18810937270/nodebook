@@ -2,9 +2,9 @@
   "paragraphs": [
     {
       "title": "Introduction",
-      "text": "%md\n\n# Introduction\n\nThis tutorial is to demonstrate how to do job control in flink (job submission/cancel/resume).\n2 steps:2\n1. Create custom data stream and register it as flink table. The custom data stream is a simulated web access logs. \n2. Query this flink table (pv for each page type), you can cancel it and then resume it again w/o savepoint.\n",
+      "text": "%md\n\n# Introduction\n\nThis tutorial is to demonstrate how to do job control in flink (job submission/cancel/resume).\n2 steps:2333\n1. Create custom data stream and register it as flink table. The custom data stream is a simulated web access logs. \n2. Query this flink table (pv for each page type), you can cancel it and then resume it again w/o savepoint.\n",
       "user": "anonymous",
-      "dateUpdated": "2021-03-02 19:38:18.342",
+      "dateUpdated": "2021-03-02 19:58:22.267",
       "progress": 0,
       "config": {
         "colWidth": 12.0,
