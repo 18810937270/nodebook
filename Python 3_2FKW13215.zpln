@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "%spark.pyspark\n\nprint(\"Hello World\")",
+      "text": "%spark.pyspark\n\nprint(\"Hello Worl1d\")",
       "user": "anonymous",
-      "dateUpdated": "2020-10-28 16:30:24.523",
+      "dateUpdated": "2021-03-04 17:12:41.692",
       "progress": 0,
       "config": {
         "editorMode": "ace/mode/python",
@@ -142,7 +142,7 @@
   "noteForms": {},
   "angularObjects": {},
   "config": {
-    "isZeppelinNotebookCronEnable": false
+    "isZeppelinNotebookCronEnable": true
   },
   "info": {}
 }
