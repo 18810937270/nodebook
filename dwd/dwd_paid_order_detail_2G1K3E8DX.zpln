@@ -1,0 +1,243 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\nflink.jm.memory 2048\nflink.tm.memory 2048\nflink.tm.slot 3\n\nexecution.checkpointing.interval 10000\nexecution.checkpointing.min-pause 5000\nexecution.checkpointing.externalized-checkpoint-retention RETAIN_ON_CANCELLATION\n\nstate.backend filesystem\nstate.checkpoints.dir hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints\n\n\nflink.yarn.appName dwd_paid_order_detail\nflink.execution.jars hdfs://nameservice1/user/xhw/jars/flink-formats-1.0-SNAPSHOT.jar",
+      "user": "admin",
+      "dateUpdated": "2021-03-04 11:19:57.884",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1614738157682_453285219",
+      "id": "paragraph_1614738157682_453285219",
+      "dateCreated": "2021-03-03 10:22:37.682",
+      "dateStarted": "2021-03-04 11:19:57.889",
+      "dateFinished": "2021-03-04 11:19:57.894",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql\nDROP TABLE IF EXISTS `ods_orders`;\nCREATE TABLE `ods_orders` (\n  `id` BIGINT,\n  `user_id` BIGINT,\n  `city_id` BIGINT,\n  `coupon_id` BIGINT,\n  `courier_id` BIGINT,\n  `order_number` STRING,\n  `batch_order_number` STRING,\n  `coupon_number` STRING,\n  `city` STRING,\n  `channel` INT,\n  `bussiness_type` INT,\n  `type` INT,\n  `status` INT,\n  `distance` INT,\n  `weight` INT,\n  `travel_way` INT,\n  `courier_travel_way` INT,\n  `remark` STRING,\n  `is_merge` INT,\n  `abnormal` INT,\n  `cancelled` INT,\n  `appoint_type` INT,\n  `admin_remark` STRING,\n  `push_times` INT,\n  `ctime` BIGINT,\n  `place_time` BIGINT,\n  `finish_time` BIGINT,\n  `dispatch_type` INT,\n  `category` INT,\n  `order_proctime` as PROCTIME()\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup2\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027, \n --\u0027scan.startup.mode\u0027 \u003d \u0027specific-offsets\u0027,\n --\u0027scan.startup.specific-offsets\u0027\u003d\u0027partition:0,offset:1390890935\u0027,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027orders\u0027\n );\nDROP TABLE IF EXISTS `ods_infos`;\nCREATE TABLE `ods_infos` (\n  `id` BIGINT,\n  `order_id` BIGINT,\n  `user_id` BIGINT,\n  `creator_mobile` STRING,\n  `creator_mobile_id` BIGINT,\n  `order_number` STRING,\n  `from_mobile_id` BIGINT,\n  `from_mobile` STRING,\n  `from_name` STRING,\n  `from_city` STRING,\n  `from_address` STRING,\n  `from_address_detail` STRING,\n  `from_lat` DECIMAL(30,20),\n  `from_lng` DECIMAL(30,20),\n  `to_mobile_id` BIGINT,\n  `to_mobile` STRING,\n  `to_name` STRING,\n  `to_city` STRING,\n  `to_address` STRING,\n  `to_address_detail` STRING,\n  `to_lat` DECIMAL(30,20),\n  `to_lng` DECIMAL(30,20),\n  `pickup_appoint_time` BIGINT,\n  `delivery_appoint_time` BIGINT,\n  `pickup_password` STRING,\n  `delivery_password` STRING,\n  `goods` STRING,\n  `check_goods` STRING,\n  `info_index` INT,\n  `distance` INT,\n  `goods_pay` BIGINT,\n  `goods_type` INT,\n  `status` INT,\n  `from_city_id` BIGINT,\n  `to_city_id` BIGINT,\n  `goods_tag` STRING,\n  `from_poi_address` STRING,\n  `to_poi_address` STRING,\n  `info_proctime` as PROCTIME()\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027,\n-- \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027,\n --\u0027scan.startup.mode\u0027 \u003d \u0027specific-offsets\u0027,\n-- \u0027scan.startup.specific-offsets\u0027\u003d\u0027partition:1,offset:638704993\u0027,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027infos\u0027\n );\n \nDROP TABLE IF EXISTS `dwd_paid_order_detail`;\nCREATE TABLE `dwd_paid_order_detail` (\n  `order_id` BIGINT,\n  `user_id` BIGINT,\n  `city_id` BIGINT,\n  `coupon_id` BIGINT,\n  `courier_id` BIGINT,\n  `order_number` STRING,\n  /*\n  Primary Key（后面 NOT ENFORCED 的意思是不强校验，因为 Connector 也许没有具备 PK 的强校验的能力）\n  kafka不具备强校验的能力\n  */\n   PRIMARY KEY (order_id) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027kafka\u0027,\n \u0027topic\u0027 \u003d \u0027dwd_paid_order_detail\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.10.9:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027dwd_paid_order_detail2\u0027,\n \u0027format\u0027 \u003d \u0027changelog-json\u0027,\n \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027\n );",
+      "user": "admin",
+      "dateUpdated": "2021-03-04 11:31:05.600",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Table has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\nTable has been dropped.\nTable has been created.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1614741990528_1564277020",
+      "id": "paragraph_1614741990528_1564277020",
+      "dateCreated": "2021-03-03 11:26:30.528",
+      "dateStarted": "2021-03-04 11:21:43.134",
+      "dateFinished": "2021-03-04 11:21:43.849",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink.ssql(type\u003d\"update\",jobName\u003d\"dwd_paid_order_detail\")\nINSERT INTO dwd_paid_order_detail\nselect\n    a.id as order_id,\n    a.user_id,\n    a.city_id,\n    a.coupon_id,\n    a.courier_id,\n    b.order_number\nfrom\n ods_orders a\nleft join\nods_infos b\non a.id \u003d b.order_id",
+      "user": "admin",
+      "dateUpdated": "2021-03-04 11:21:48.709",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/521b2674682eb8ded46320a4acb8d5e3/chk-1194",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "user_id": "string",
+                      "city_id": "string",
+                      "coupon_id": "string",
+                      "courier_id": "string",
+                      "order_id": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-4:27235#/job/521b2674682eb8ded46320a4acb8d5e3"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1614752324260_1646192117",
+      "id": "paragraph_1614752324260_1646192117",
+      "dateCreated": "2021-03-03 14:18:44.261",
+      "dateStarted": "2021-03-04 11:21:48.717",
+      "dateFinished": "2021-03-04 11:19:37.510",
+      "status": "RUNNING"
+    },
+    {
+      "text": "%flink.ssql(type\u003d\"update\",jobName\u003d\"dwd_paid_order_detail2\")\nselect\n    a.order_id,\n    count(*) as cnt\nfrom\ndwd_paid_order_detail a where order_id \u003d 11659895\ngroup by a.order_id",
+      "user": "admin",
+      "dateUpdated": "2021-03-04 11:21:58.450",
+      "progress": 0,
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql",
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/4c3e08a12ed49496acc77dd005c740d2/chk-1195"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-4:27235#/job/4c3e08a12ed49496acc77dd005c740d2"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1614753129620_1997858325",
+      "id": "paragraph_1614753129620_1997858325",
+      "dateCreated": "2021-03-03 14:32:09.620",
+      "dateStarted": "2021-03-04 11:21:58.456",
+      "dateFinished": "2021-03-04 11:19:37.510",
+      "status": "RUNNING"
+    },
+    {
+      "text": "%flink.ssql\n",
+      "user": "admin",
+      "dateUpdated": "2021-03-03 19:47:49.419",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1614772069418_1782005264",
+      "id": "paragraph_1614772069418_1782005264",
+      "dateCreated": "2021-03-03 19:47:49.419",
+      "status": "READY"
+    }
+  ],
+  "name": "dwd_paid_order_detail",
+  "id": "2G1K3E8DX",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "flink-2G1K3E8DX": [
+      {
+        "name": "duration",
+        "object": "3 hours 19 minutes 41 seconds",
+        "noteId": "2G1K3E8DX",
+        "paragraphId": "paragraph_1614752324260_1646192117"
+      }
+    ]
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": true
+  },
+  "info": {}
+}
