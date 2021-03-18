@@ -1,0 +1,369 @@
+{
+  "paragraphs": [
+    {
+      "text": "%flink111.conf\nflink.jm.memory 2048\nflink.tm.memory 2048\nflink.tm.slot 1\nflink.yarn.appName dwd_paid_order_detail\nflink.execution.jars hdfs://nameservice1/user/xhw/flink-connectors-1.11.2.jar\nflink.execution.packages org.apache.flink:flink-connector-kafka_2.11:1.11.2\n",
+      "user": "admin",
+      "dateUpdated": "2021-03-18 19:10:37.099",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1615272415588_166759372",
+      "id": "paragraph_1614850012097_1111714107",
+      "dateCreated": "2021-03-09 14:46:55.588",
+      "dateStarted": "2021-03-18 19:10:37.109",
+      "dateFinished": "2021-03-18 19:10:37.126",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink111\nstenv.getConfig.setIdleStateRetentionTime(org.apache.flink.api.common.time.Time.hours(3), org.apache.flink.api.common.time.Time.hours(4))",
+      "user": "admin",
+      "dateUpdated": "2021-03-18 19:10:50.393",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1615272415589_1916337568",
+      "id": "paragraph_1614850076306_1977556055",
+      "dateCreated": "2021-03-09 14:46:55.589",
+      "dateStarted": "2021-03-18 19:10:50.402",
+      "dateFinished": "2021-03-18 19:11:55.893",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%flink111.ssql\nDROP TABLE IF EXISTS `ods_infos`;\nCREATE TABLE `ods_infos` (\n  `id` BIGINT,\n  `order_id` BIGINT,\n  `user_id` BIGINT,\n  `creator_mobile` STRING,\n  `creator_mobile_id` BIGINT,\n  `order_number` STRING,\n  `from_mobile_id` BIGINT,\n  `from_mobile` STRING,\n  `from_name` STRING,\n  `from_city` STRING,\n  `from_address` STRING,\n  `from_address_detail` STRING,\n  `from_lat` DECIMAL(30,20),\n  `from_lng` DECIMAL(30,20),\n  `to_mobile_id` BIGINT,\n  `to_mobile` STRING,\n  `to_name` STRING,\n  `to_city` STRING,\n  `to_address` STRING,\n  `to_address_detail` STRING,\n  `to_lat` DECIMAL(30,20),\n  `to_lng` DECIMAL(30,20),\n  `pickup_appoint_time` BIGINT,\n  `delivery_appoint_time` BIGINT,\n  `pickup_password` STRING,\n  `delivery_password` STRING,\n  `goods` STRING,\n  `check_goods` STRING,\n  `info_index` INT,\n  `distance` INT,\n  `goods_pay` BIGINT,\n  `goods_type` INT,\n  `status` INT,\n  `from_city_id` BIGINT,\n  `to_city_id` BIGINT,\n  `goods_tag` STRING,\n  `from_poi_address` STRING,\n  `to_poi_address` STRING,\n  `info_proctime` as PROCTIME(),\n   PRIMARY KEY (id) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027ss-kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,  -- 自定义解析canal-json\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027infos\u0027, -- mysql 中的表名\n-- \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027\n --\u0027scan.startup.mode\u0027 \u003d \u0027specific-offsets\u0027,\n-- \u0027scan.startup.specific-offsets\u0027\u003d\u0027partition:1,offset:638704993\u0027,\n );\nDROP TABLE IF EXISTS `ods_orders`;\nCREATE TABLE `ods_orders` (\n  `id` BIGINT,\n  `user_id` BIGINT,\n  `city_id` BIGINT,\n  `coupon_id` BIGINT,\n  `courier_id` BIGINT,\n  `order_number` STRING,\n  `batch_order_number` STRING,\n  `coupon_number` STRING,\n  `city` STRING,\n  `channel` INT,\n  `bussiness_type` INT,\n  `type` INT,\n  `status` INT,\n  `distance` INT,\n  `weight` INT,\n  `travel_way` INT,\n  `courier_travel_way` INT,\n  `remark` STRING,\n  `is_merge` INT,\n  `abnormal` INT,\n  `cancelled` INT,\n  `appoint_type` INT,\n  `admin_remark` STRING,\n  `push_times` INT,\n  `ctime` BIGINT,\n  `place_time` BIGINT,\n  `finish_time` BIGINT,\n  `dispatch_type` INT,\n  `category` INT,\n  `order_proctime` as PROCTIME(),\n   PRIMARY KEY (id) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027ss-kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027orders\u0027,\n-- \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027\n );\n \n \n DROP TABLE IF EXISTS `ods_rank_records`;\n CREATE TABLE `ods_rank_records` (\n  `id` bigint,\n  `courier_id` bigint,\n  `user_id` bigint,\n  `city_id` bigint,\n  `order_id` bigint,\n  `order_number` string,\n  `city` string,\n  `is_deal` int,\n  `is_rank` int,\n  `content` string,\n  `items` string,\n  `star` int,\n  `type` int,\n  `is_auto` int,\n  `is_black` int,\n  `ctime` bigint,\n  `utime` bigint,\n  `to_mobile` string\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027ss-kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027rank_records\u0027,\n-- \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027\n );\n\nDROP TABLE IF EXISTS `ods_courier_service_verify_record`;\nCREATE TABLE `ods_courier_service_verify_record` (\n  `id` bigint,\n  `order_id` bigint,\n  `order_number` varchar,\n  `city_id` bigint,\n  `courier_id` bigint,\n  `type` int,\n  `time_out` string,\n  `remark` string,\n  `check_time` bigint,\n  `check_status` int,\n  `punish_flag` int,\n  `operator` varchar,\n  `operator_id` bigint,\n  `ctime` bigint,\n  `utime` bigint,\n  `train_id` bigint\n)\nWITH(\n\u0027connector\u0027 \u003d \u0027ss-kafka\u0027,\n  \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,\n \u0027ss-canal-json.table_name\u0027 \u003d \u0027courier_service_verify_record\u0027,\n-- \u0027scan.startup.mode\u0027 \u003d \u0027latest-offset\u0027\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027\n);\nDROP TABLE IF EXISTS `dwd_paid_order_detail`;\nCREATE TABLE `dwd_paid_order_detail` (\n  `info_id` BIGINT,\n  `user_id` BIGINT,\n  `city_id` BIGINT,\n  `coupon_id` BIGINT,\n  `courier_id` BIGINT,\n  `order_number` STRING,\n  `batch_order_number` STRING,\n  `coupon_number` STRING,\n  `city` STRING,\n  `channel` INT,\n  `bussiness_type` INT,\n  `type` INT,\n  `status` INT,\n  `distance` INT,\n  `weight` INT,\n  `travel_way` INT,\n  `courier_travel_way` INT,\n  `remark` STRING,\n  `is_merge` INT,\n  `abnormal` INT,\n  `cancelled` INT,\n  `appoint_type` INT,\n  `admin_remark` STRING,\n  `push_times` INT,\n  `ctime` BIGINT,\n  `place_time` BIGINT,\n  `finish_time` BIGINT,\n  `dispatch_type` INT,\n  `category` INT,\n  `order_id` BIGINT,\n  `info_user_id` BIGINT,\n  `creator_mobile` STRING,\n  `creator_mobile_id` BIGINT,\n  `info_order_number` STRING,\n  `from_mobile_id` BIGINT,\n  `from_mobile` STRING,\n  `from_name` STRING,\n  `from_city` STRING,\n  `from_address` STRING,\n  `from_address_detail` STRING,\n  `from_lat` DECIMAL(30,20),\n  `from_lng` DECIMAL(30,20),\n  `to_mobile_id` BIGINT,\n  `to_mobile` STRING,\n  `to_name` STRING,\n  `to_city` STRING,\n  `to_address` STRING,\n  `to_address_detail` STRING,\n  `to_lat` DECIMAL(30,20),\n  `to_lng` DECIMAL(30,20),\n  `pickup_appoint_time` BIGINT,\n  `delivery_appoint_time` BIGINT,\n  `pickup_password` STRING,\n  `delivery_password` STRING,\n  `goods` STRING,\n  `check_goods` STRING,\n  `info_index` INT,\n  `info_distance` INT,\n  `goods_pay` BIGINT,\n  `goods_type` INT,\n  `info_status` INT,\n  `from_city_id` BIGINT,\n  `to_city_id` BIGINT,\n  `goods_tag` STRING,\n  `from_poi_address` STRING,\n  `to_poi_address` STRING,\n\n  `is_deal` int,\n  `is_rank` int,\n  `content` string,\n  `items` string,\n  `star` int,\n  `rank_type` int,\n  `is_auto` int,\n  `is_black` int,\n\n  `service_type` int,\n  `time_out` string,\n  `check_time` bigint,\n  `check_status` int,\n  `punish_flag` int,\n  `operator` varchar,\n  `operator_id` bigint,\n  `train_id` bigint\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027ss-kafka\u0027,\n \u0027topic\u0027 \u003d \u0027dwd_paid_order_detail\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027format\u0027 \u003d \u0027changelog-json\u0027,\n \u0027sink.partitioner\u0027 \u003d \u0027fixed\u0027\n );",
+      "user": "admin",
+      "dateUpdated": "2021-03-18 19:35:17.627",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: CREATE TABLE `ods_infos` (\n  `id` BIGINT,\n  `order_id` BIGINT,\n  `user_id` BIGINT,\n  `creator_mobile` STRING,\n  `creator_mobile_id` BIGINT,\n  `order_number` STRING,\n  `from_mobile_id` BIGINT,\n  `from_mobile` STRING,\n  `from_name` STRING,\n  `from_city` STRING,\n  `from_address` STRING,\n  `from_address_detail` STRING,\n  `from_lat` DECIMAL(30,20),\n  `from_lng` DECIMAL(30,20),\n  `to_mobile_id` BIGINT,\n  `to_mobile` STRING,\n  `to_name` STRING,\n  `to_city` STRING,\n  `to_address` STRING,\n  `to_address_detail` STRING,\n  `to_lat` DECIMAL(30,20),\n  `to_lng` DECIMAL(30,20),\n  `pickup_appoint_time` BIGINT,\n  `delivery_appoint_time` BIGINT,\n  `pickup_password` STRING,\n  `delivery_password` STRING,\n  `goods` STRING,\n  `check_goods` STRING,\n  `info_index` INT,\n  `distance` INT,\n  `goods_pay` BIGINT,\n  `goods_type` INT,\n  `status` INT,\n  `from_city_id` BIGINT,\n  `to_city_id` BIGINT,\n  `goods_tag` STRING,\n  `from_poi_address` STRING,\n  `to_poi_address` STRING,\n  `info_proctime` as PROCTIME(),\n   PRIMARY KEY (id) NOT ENFORCED\n)\nWITH(\n \u0027connector\u0027 \u003d \u0027ss-kafka\u0027,\n \u0027topic\u0027 \u003d \u0027canal_monitor_order\u0027,\n \u0027properties.bootstrap.servers\u0027 \u003d \u0027192.168.40.15:9092\u0027,\n \u0027properties.group.id\u0027 \u003d \u0027testGroup1\u0027,\n \u0027format\u0027 \u003d \u0027ss-canal-json\u0027 ,  \n \u0027ss-canal-json.table_name\u0027 \u003d \u0027infos\u0027, \n\n \u0027scan.startup.mode\u0027 \u003d \u0027earliest-offset\u0027\n \n\n )\norg.apache.flink.table.api.ValidationException: Could not execute CreateTable in path `default_catalog`.`default_database`.`ods_infos`\n\tat org.apache.flink.table.catalog.CatalogManager.execute(CatalogManager.java:793)\n\tat org.apache.flink.table.catalog.CatalogManager.createTable(CatalogManager.java:631)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.executeOperation(TableEnvironmentImpl.java:796)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.sqlUpdate(TableEnvironmentImpl.java:779)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCreateTable(FlinkSqlInterrpeter.java:376)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:267)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:852)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:744)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: org.apache.flink.table.catalog.exceptions.TableAlreadyExistException: Table (or view) default_database.ods_infos already exists in Catalog default_catalog.\n\tat org.apache.flink.table.catalog.GenericInMemoryCatalog.createTable(GenericInMemoryCatalog.java:215)\n\tat org.apache.flink.table.catalog.CatalogManager.lambda$createTable$10(CatalogManager.java:632)\n\tat org.apache.flink.table.catalog.CatalogManager.execute(CatalogManager.java:791)\n\t... 17 more\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1615272415589_243562347",
+      "id": "paragraph_1614850051908_868318968",
+      "dateCreated": "2021-03-09 14:46:55.589",
+      "dateStarted": "2021-03-18 19:34:28.856",
+      "dateFinished": "2021-03-18 19:34:29.468",
+      "status": "ERROR"
+    },
+    {
+      "text": "%flink111.ssql(jobName\u003d\"dwd_paid_order_detail\",parallelism\u003d3)\nINSERT INTO dwd_paid_order_detail\nselect\n    b.id as info_id,\n    a.user_id,\n    a.city_id,\n    a.coupon_id,\n    a.courier_id,\n    a.order_number,\n    a.batch_order_number,\n    a.coupon_number,\n    a.city,\n    a.channel,\n    a.bussiness_type,\n    a.type,\n    a.status,\n    a.distance,\n    a.weight,\n    a.travel_way,\n    a.courier_travel_way,\n    a.remark,\n    a.is_merge,\n    a.abnormal,\n    a.cancelled,\n    a.appoint_type,\n    a.admin_remark,\n    a.push_times,\n    a.ctime,\n    a.place_time,\n    a.finish_time,\n    a.dispatch_type,\n    a.category,\n    a.id as order_id,\n    b.user_id as info_user_id,\n    b.creator_mobile,\n    b.creator_mobile_id,\n    b.order_number as info_order_number,\n    b.from_mobile_id,\n    b.from_mobile,\n    b.from_name,\n    b.from_city,\n    b.from_address,\n    b.from_address_detail,\n    b.from_lat,\n    b.from_lng,\n    b.to_mobile_id,\n    b.to_mobile,\n    b.to_name,\n    b.to_city,\n    b.to_address,\n    b.to_address_detail,\n    b.to_lat,\n    b.to_lng,\n    b.pickup_appoint_time,\n    b.delivery_appoint_time,\n    b.pickup_password,\n    b.delivery_password,\n    b.goods,\n    b.check_goods,\n    if(b.info_index is null,1,b.info_index) info_index,\n    b.distance as info_distance,\n    b.goods_pay,\n    b.goods_type,\n    b.status as info_status,\n    b.from_city_id,\n    b.to_city_id,\n    b.goods_tag,\n    b.from_poi_address,\n    b.to_poi_address,\n\n    c.is_deal,\n    c.is_rank,\n    c.content,\n    c.items,\n    c.star,\n    c.type as rank_type,\n    c.is_auto,\n    c.is_black,\n\n    d.type as service_type,\n    d.time_out,\n    d.check_time,\n    d.check_status,\n    d.punish_flag,\n    d.operator,\n    d.operator_id,\n    d.train_id\nfrom\nods_orders a\njoin\nods_infos b\nON a.id \u003d b.order_id \nleft join\nods_rank_records c\non a.id \u003d c.order_id\nleft join\nods_courier_service_verify_record d\non a.id \u003d d.order_id;",
+      "user": "admin",
+      "dateUpdated": "2021-03-18 19:37:26.991",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/b6b719d7459aa1e4997cab399567fdb3/chk-24",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-4:17444#/job/b6b719d7459aa1e4997cab399567fdb3"
+            }
+          ],
+          "interpreterSettingId": "flink111"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1615272415589_97036700",
+      "id": "paragraph_1614850180812_308024373",
+      "dateCreated": "2021-03-09 14:46:55.589",
+      "dateStarted": "2021-03-18 19:37:27.001",
+      "dateFinished": "2021-03-18 19:10:32.334",
+      "status": "RUNNING"
+    },
+    {
+      "text": "%flink111.ssql(type\u003dupdate,jobName\u003d\"ods_orders\",resumeFromLatestCheckpoint\u003dtrue,parallelism\u003d1)\nselect order_id,info_id,courier_id,creator_mobile_id,coupon_id from dwd_paid_order_detail\n",
+      "user": "admin",
+      "dateUpdated": "2021-03-18 19:50:22.554",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.11.2/checkpoints/7fda6a684699b33e2364747b211bdb00/chk-20",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "order_id": "string",
+                      "info_id": "string",
+                      "courier_id": "string",
+                      "creator_mobile_id": "string",
+                      "coupon_id": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-4:17444#/job/7fda6a684699b33e2364747b211bdb00"
+            }
+          ],
+          "interpreterSettingId": "flink111"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1615272415590_191737156",
+      "id": "paragraph_1614851298517_1500907771",
+      "dateCreated": "2021-03-09 14:46:55.590",
+      "dateStarted": "2021-03-18 19:50:22.558",
+      "dateFinished": "2021-03-18 19:48:15.522",
+      "status": "RUNNING"
+    },
+    {
+      "text": "%flink111.ssql(type\u003dupdate,jobName\u003d\"ods_orders_cnt\",parallelism\u003d1)\nselect order_id,count(*) as cnt,count(distinct order_id) as info_cnt from dwd_paid_order_detail where order_id \u003d11659897 group by order_id",
+      "user": "admin",
+      "dateUpdated": "2021-03-10 10:33:02.760",
+      "progress": 0,
+      "config": {
+        "latest_checkpoint_path": "hdfs://nameservice1/user/hdfs/flink1.12.2/checkpoints/294047a92a0ed87cc96853ee6611eb82/chk-3",
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "order_id": "string",
+                      "cnt": "string",
+                      "info_cnt": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "order_id\tcnt\tinfo_cnt\n11659897\t3\t1\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: select order_id,count(*) as cnt,count(distinct order_id) as info_cnt from dwd_paid_order_detail where order_id \u003d11659897 group by order_id\njava.io.IOException: Fail to run stream sql job\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:172)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:105)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInnerSelect(FlinkStreamSqlInterpreter.java:89)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callSelect(FlinkSqlInterrpeter.java:494)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.callCommand(FlinkSqlInterrpeter.java:257)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.runSqlList(FlinkSqlInterrpeter.java:151)\n\tat org.apache.zeppelin.flink.FlinkSqlInterrpeter.internalInterpret(FlinkSqlInterrpeter.java:111)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:47)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:852)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:744)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.util.concurrent.ExecutionException: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: 294047a92a0ed87cc96853ee6611eb82)\n\tat java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:357)\n\tat java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)\n\tat org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.execute(StreamExecutionEnvironment.java:1717)\n\tat org.apache.flink.table.planner.delegation.ExecutorBase.execute(ExecutorBase.java:52)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.execute(TableEnvironmentImpl.java:1214)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:161)\n\t... 16 more\nCaused by: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: 294047a92a0ed87cc96853ee6611eb82)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:116)\n\tat java.util.concurrent.CompletableFuture.uniApply(CompletableFuture.java:602)\n\tat java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:577)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1962)\n\tat org.apache.flink.client.program.rest.RestClusterClient.lambda$pollResourceAsync$22(RestClusterClient.java:602)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1962)\n\tat org.apache.flink.runtime.concurrent.FutureUtils.lambda$retryOperationWithDelay$8(FutureUtils.java:309)\n\tat java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:760)\n\tat java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:736)\n\tat java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)\n\tat java.util.concurrent.CompletableFuture.postFire(CompletableFuture.java:561)\n\tat java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:929)\n\tat java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:442)\n\t... 3 more\nCaused by: org.apache.flink.runtime.client.JobCancellationException: Job was cancelled.\n\tat org.apache.flink.runtime.jobmaster.JobResult.toJobExecutionResult(JobResult.java:149)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$null$6(ClusterClientJobClientAdapter.java:114)\n\t... 19 more\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "http://bigdata-dev-node-3:19943#/job/294047a92a0ed87cc96853ee6611eb82"
+            }
+          ],
+          "interpreterSettingId": "flink111"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1615272415590_1938836178",
+      "id": "paragraph_1615170270597_1108198852",
+      "dateCreated": "2021-03-09 14:46:55.590",
+      "dateStarted": "2021-03-09 16:32:40.106",
+      "dateFinished": "2021-03-09 16:39:03.148",
+      "status": "ABORT"
+    },
+    {
+      "text": "%flink111.ssql\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-03-09 15:19:18.664",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1615274358664_1337549690",
+      "id": "paragraph_1615274358664_1337549690",
+      "dateCreated": "2021-03-09 15:19:18.664",
+      "status": "READY"
+    }
+  ],
+  "name": "dwd_paid_order_detail_111",
+  "id": "2FZCPFT66",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "flink111-2FZCPFT66": [
+      {
+        "name": "duration",
+        "object": "49 minutes 9 seconds",
+        "noteId": "2FZCPFT66",
+        "paragraphId": "paragraph_1614850180812_308024373"
+      }
+    ]
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": true
+  },
+  "info": {}
+}
